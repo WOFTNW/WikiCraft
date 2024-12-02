@@ -1,0 +1,6 @@
+name: WikiCraft
+version: '0.1.0-SNAPSHOT'
+main: io.github.iherongh.wikicraft.WikiCraft
+api-version: '1.21'
+authors: [ iHeron ]
+description: Integrates MediaWiki searching into Minecraft.
