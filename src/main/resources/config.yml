@@ -1,0 +1,71 @@
+# WikiCraft Configuration
+
+# The base URL of your wiki
+#
+# Option:
+#   - Any valid MediaWiki URL
+#
+# Default: https://example.com/wiki
+
+wiki-url: "https://example.com/wiki/"
+
+# Maximum number of search results to display
+#
+# Options:
+#   - Any integer
+#
+# Default: 10
+
+max-results: 10
+
+# Localisation settings
+#
+# Options:
+#   - en-US (100%)
+#
+# Default: en-US
+
+locale: "en-US"
+
+# Message customization
+
+messages:
+  en-US:
+    usage:
+      config: ""
+      disable: ""
+      help: ""
+      reload: ""
+      search: ""
+    fail:
+      generic:
+        not-enough-args: "Not enough arguments provided!"
+        too-many-args: "Too many arguments provided!"
+      commands:
+        config:
+          not-enough-args: "generic.not-enough-args"
+          too-many-args: "generic.too-many-args"
+          get:
+            not-enough-args: "generic.not-enough-args"
+            too-many-args: "generic.too-many-args"
+          set:
+            not-enough-args: "generic.not-enough-args"
+            too-many-args: "generic.too-many-args"
+        disable:
+          too-many-args: "generic.too-many-args"
+        help:
+          - "WikiCraft help"
+          - "/wiki"
+          - " ├─ config"
+          - " │  ├─ get <key>"
+          - " │  ├─ reload"
+          - " │  └─ set <key> <value>"
+          - " ├─ help"
+          - " └─ search"
+        reload:
+          too-many-args: "generic.too-many-args"
+        search:
+          not-enough-args: "generic.not-enough-args"
+          too-many-args: "generic.too-many-args"
+          no-results: "There were no results that matched your search query."
+          timed-out: "The request timed out."

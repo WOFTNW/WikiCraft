@@ -1,0 +1,34 @@
+name: WikiCraft
+version: '0.1.0-SNAPSHOT'
+main: io.github.iherongh.wikicraft.WikiCraft
+api-version: '1.21'
+author: iHeron
+description: Integrates MediaWiki searching into Minecraft.
+
+libraries:
+  - io.github.fastily:jwiki:1.11.0
+
+commands:
+  wiki:
+    description: Search for information on a topic in MediaWiki.
+    usage: /wiki <config|help|search> [arguments]
+
+permissions:
+  wikicraft.*:
+    description: Gives access to all WikiCraft commands
+    default: op
+    children:
+      wikicraft.config: true
+      wikicraft.help: true
+      wikicraft.search: true
+  wikicraft.config:
+    description: Allows access to all WikiCraft configuration
+  wikicraft.disable:
+    description: Allows the user to disable WikiCraft
+    default: op
+  wikicraft.help:
+    description: Allows access to the WikiCraft help page
+  wikicraft.reload:
+    description: Allows access to reloading the WikiCraft plugin
+  wikicraft.search:
+    description: Allows access to search through the configured wiki
