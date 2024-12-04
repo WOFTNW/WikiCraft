@@ -8,11 +8,6 @@ description: Integrates MediaWiki searching into Minecraft.
 libraries:
   - io.github.fastily:jwiki:1.11.0
 
-commands:
-  wiki:
-    description: Search for information on a topic in MediaWiki.
-    usage: /wiki <config|help|search> [arguments]
-
 permissions:
   wikicraft.*:
     description: Gives access to all WikiCraft commands

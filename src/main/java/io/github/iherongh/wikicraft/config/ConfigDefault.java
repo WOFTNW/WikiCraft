@@ -1,10 +1,10 @@
-package io.github.iherongh.wikicraft.file.config;
+package io.github.iherongh.wikicraft.config;
 
 import org.bukkit.configuration.file.FileConfiguration;
 
 import static io.github.iherongh.wikicraft.WikiCraft.instance;
 
-public class DefaultConfig {
+public class ConfigDefault {
 
 	public static void instantiateWikiCraftConfig() {
 		FileConfiguration config = instance.getConfig();
@@ -49,6 +49,7 @@ public class DefaultConfig {
 			config.set( "messages.en-US.fail.commands.search.no-perm", "{generic.no-perm}" );
 			config.set( "messages.en-US.fail.commands.search.no-results", "There were no results that matched your query." );
 			config.set( "messages.en-US.fail.commands.search.timed-out", "The request timed out." );
+
 		}
 
 		instance.saveConfig();
