@@ -1,13 +1,12 @@
 package io.github.iherongh.wikicraft.config;
 
+import io.github.iherongh.wikicraft.WikiCraft;
 import org.bukkit.configuration.file.FileConfiguration;
 
-import static io.github.iherongh.wikicraft.WikiCraft.instance;
-
-public class ConfigDefault {
+public class WCConfigDefault {
 
 	public static void instantiateWikiCraftConfig() {
-		FileConfiguration config = instance.getConfig();
+		FileConfiguration config = WikiCraft.getInstance().getConfig();
 
 		if ( !config.contains( "wiki-url" ) )       { config.set( "wiki-url", "https://example.com/wiki" ); }
 
@@ -52,7 +51,7 @@ public class ConfigDefault {
 
 		}
 
-		instance.saveConfig();
+		WikiCraft.getInstance().saveConfig();
 
 	}
 

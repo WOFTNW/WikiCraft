@@ -2,8 +2,10 @@ package io.github.iherongh.wikicraft;
 
 import dev.jorel.commandapi.CommandAPI;
 import dev.jorel.commandapi.CommandAPIBukkitConfig;
-import io.github.iherongh.wikicraft.commands.CommandWiki;
-import io.github.iherongh.wikicraft.config.ConfigDefault;
+import io.github.iherongh.wikicraft.commands.WCCommandWiki;
+import io.github.iherongh.wikicraft.config.WCConfigDefault;
+import io.github.iherongh.wikicraft.file.WCFileAccountBridge;
+import io.github.iherongh.wikicraft.messages.WCMessages;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.TextColor;
@@ -19,12 +21,19 @@ public final class WikiCraft extends JavaPlugin {
 	public static final RGBLike PRIMARY = TextColor.color( 54, 179, 160 );
 	public static final RGBLike SECONDARY = TextColor.color( 21, 101, 107 );
 	public static final RGBLike TERTIARY = TextColor.color( 18, 55, 54 );
+	public static final RGBLike TEXT_INFO = TextColor.color(191, 218, 207);
+	public static final RGBLike TEXT_ERROR = TextColor.color(82, 53, 234);
 
 	public static TextComponent PREFIX =
 			Component.text( "[" ).color( TextColor.color( TERTIARY ) )
 				.append( Component.text( "Wiki" ).color( TextColor.color( PRIMARY ) )
 				.append( Component.text( "Craft" ).color( TextColor.color( SECONDARY ) ) )
-				.append( Component.text( "]" ).color( TextColor.color( TERTIARY ) ) ) );
+				.append( Component.text( "] " ).color( TextColor.color( TERTIARY ) ) ) );
+	public static TextComponent PREFIX_SHORT =
+			Component.text( "[" ).color( TextColor.color( TERTIARY ) )
+				.append( Component.text( "W" ).color( TextColor.color( PRIMARY ) )
+				.append( Component.text( "C" ).color( TextColor.color( SECONDARY ) ) )
+				.append( Component.text( "] " ).color( TextColor.color( TERTIARY ) ) ) );
 
 	public WikiCraft() {
 		instance = this;
@@ -46,8 +55,11 @@ public final class WikiCraft extends JavaPlugin {
 		try {
 			setInstance( this );
 
-			// Load configuration from config.yml file
+			// Load config.yml file
 			loadConfig();
+
+			// Load account_bridge.txt file
+			loadAccountBridge();
 
 			// Initialize CommandAPI
 			CommandAPI.onLoad( new CommandAPIBukkitConfig( this ) );
@@ -94,7 +106,7 @@ public final class WikiCraft extends JavaPlugin {
 
 		try {
 			// Populate and instantiate default values
-			ConfigDefault.instantiateWikiCraftConfig();
+			WCConfigDefault.instantiateWikiCraftConfig();
 
 			// Reload the getKeys
 			this.reloadConfig();
@@ -108,11 +120,25 @@ public final class WikiCraft extends JavaPlugin {
 
 	}
 
+	private void loadAccountBridge() {
+		WCMessages.debug( "info", "Attempting to load account bridge..." );
+
+		try {
+			WCFileAccountBridge.instantiateAccountFile();
+			WCMessages.debug( "info", "Account bridge file successfully loaded." );
+
+		} catch ( Exception e ) {
+			WCMessages.debug( "warning", "Unable to generate account bridge file: " + e.getMessage() );
+
+		}
+
+	}
+
 	private void registerCommands() {
 		getLogger().info( "Registering commands..." );
 
 		try {
-			new CommandWiki().getCommand().register();
+			new WCCommandWiki().getCommand().register();
 
 		} catch ( Exception e ) {
 			getLogger().warning( "/wiki was unable to register: " + e.getMessage() );
