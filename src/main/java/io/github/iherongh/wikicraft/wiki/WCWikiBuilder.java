@@ -1,7 +1,6 @@
 package io.github.iherongh.wikicraft.wiki;
 
 import io.github.fastily.jwiki.core.Wiki;
-import io.github.iherongh.wikicraft.WikiCraft;
 import io.github.iherongh.wikicraft.commands.WCCommandWikiLogin;
 import io.github.iherongh.wikicraft.config.WCConfigUtils;
 import io.github.iherongh.wikicraft.messages.WCMessages;

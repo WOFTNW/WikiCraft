@@ -1,7 +1,6 @@
 package io.github.iherongh.wikicraft.commands;
 
 import io.github.fastily.jwiki.core.NS;
-import io.github.fastily.jwiki.core.Wiki;
 import io.github.iherongh.wikicraft.wiki.WCWikiBuilder;
 
 import java.util.ArrayList;

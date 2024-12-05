@@ -1,53 +1,69 @@
 package io.github.iherongh.wikicraft.commands;
 
 import io.github.fastily.jwiki.core.Wiki;
-import io.github.iherongh.wikicraft.WikiCraft;
 import io.github.iherongh.wikicraft.file.WCFileAccountBridge;
 import io.github.iherongh.wikicraft.messages.WCMessages;
 import io.github.iherongh.wikicraft.wiki.WCWikiBuilder;
+import net.kyori.adventure.text.Component;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.shanerx.mojang.Mojang;
+import org.shanerx.mojang.PlayerProfile;
 
 public class WCCommandWikiLogin {
 	private static final Wiki wiki = WCWikiBuilder.buildWiki();
 
-	public static String requestLogin( CommandSender sender, String username, String password ) {
-		username = username.replace( "\"", "" );
-		password = password.replace( "\"", "" );
-
-		if ( wiki.login( username, password ) ) {
-			WikiCraft.getInstance().getLogger().info( "Login successful under username " + username );
-
-			if ( sender instanceof Player player ) {
-				WCMessages.debug( "info", "Attempting account link..." );
-				if ( WCFileAccountBridge.addLink( player.getUniqueId(), username ) ) {
-					WCMessages.debug( "info", username + " successfully linked to " + player.getUniqueId() );
-
-				}
-
-			} else {
-				WCMessages.debug( "warning", "Command sender is not a player; aborting account link." );
-
-			}
-
-
-			return "Login successful! Welcome, " + username + "!";
+	public static boolean requestLogin( CommandSender sender, String wikiUsername, String wikiPassword ) {
+		if ( sender instanceof Player player ) {
+			return requestLogin( sender, player.getName(), wikiUsername, wikiPassword );
 
 		} else {
-			WikiCraft.getInstance().getLogger().info( "Login unsuccessful under username " + username );
-			return "Login unsuccessful. Attempted with" + username + " " + password;
+			return requestLogin( sender, null, wikiUsername, wikiPassword );
 
 		}
 
 	}
 
-	public static String refreshLogin() {
-		if ( wiki.whoami() == null || wiki.whoami().isEmpty() ) {
-			return "No login found. Use /wiki login <username> <password> to attempt login.";
+
+	public static boolean requestLogin( CommandSender sender, String mcUsername, String wikiUsername, String wikiPassword ) {
+		Mojang m = new Mojang().connect();
+		PlayerProfile playerProfile = m.getPlayerProfile( mcUsername );
+
+		wikiUsername = wikiUsername.replace( "\"", "" );
+		wikiPassword = wikiPassword.replace( "\"", "" );
+
+		if ( !wiki.login( wikiUsername, wikiPassword ) ) {
+			WCMessages.debug( "info", "Login unsuccessful under username " + wikiUsername );
+			return false;
 
 		}
 
-		return "Logged in as " + wiki.whoami();
+		WCMessages.debug(  "info", "Login successful under username " + wikiUsername );
+
+		if ( mcUsername == null ) {
+			WCMessages.debug( "warning", "Command sender is not a player; aborting account link." );
+
+		} else {
+			WCMessages.debug( "info", "Attempting account link..." );
+			if ( !WCFileAccountBridge.addLink( WCFileAccountBridge.formatStringUUIDToUUID( playerProfile.getUUID() ), wikiUsername ) ) {
+				WCMessages.debug( "warning", "Unable to link " + mcUsername + " to wiki user " + wikiUsername + "!" );
+				return false;
+
+			}
+			WCMessages.debug( "info", wikiUsername + " successfully linked to " + playerProfile.getUUID() );
+
+		}
+		return true;
+
+	}
+
+	public static Component refreshLogin() {
+		if ( wiki.whoami() == null || wiki.whoami().isEmpty() ) {
+			return WCMessages.message( "error", "No login found. Use /wiki login <username> <password> to attempt login." );
+
+		}
+
+		return WCMessages.message( "info", "Logged in as " + wiki.whoami() + "." );
 
 	}
 

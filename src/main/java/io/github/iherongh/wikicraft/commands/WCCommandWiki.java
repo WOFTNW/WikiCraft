@@ -35,8 +35,7 @@ public class WCCommandWiki {
 								.withArguments( new StringArgument( "username" ))
 								.executes( ( sender, args ) -> {
 									String uuid = new Mojang().connect().getUUIDOfUsername( args.rawArgs()[ 0 ] );
-									uuid = String.format( "%s-%s-%s-%s-%s", uuid.substring( 0, 8 ), uuid.substring( 8, 12 ), uuid.substring( 12, 16 ), uuid.substring( 16, 20 ), uuid.substring( 20, 32 ) );
-									sender.sendMessage( WCFileAccountBridge.getWikiUser( UUID.fromString( uuid ) ) );
+									sender.sendMessage( WCFileAccountBridge.getWikiUser( WCFileAccountBridge.formatStringUUIDToUUID( uuid ) ) );
 								})
 				),
 				// /wiki config <get|reload|set>
@@ -88,11 +87,36 @@ public class WCCommandWiki {
 								.withPermission( CommandPermission.fromString( "wikicraft.user" ) )
 								.withArguments( new TextArgument( "username" ), new TextArgument( "password" ) )
 								.executes( ( sender, args ) -> {
-									String username = args.rawArgs()[ 0 ];
-									String password = args.rawArgs()[ 1 ];
-									sender.sendMessage( WCCommandWikiLogin.requestLogin( sender, username, password ) );
+									String wikiUsername = args.rawArgs()[ 0 ];
+									String wikiPassword = args.rawArgs()[ 1 ];
+									if ( WCCommandWikiLogin.requestLogin( sender, wikiUsername, wikiPassword ) ) {
+										sender.sendMessage( WCMessages.message( "info", "Login successful!" ) );
+
+									} else {
+										sender.sendMessage( WCMessages.message( "error", "Login unsuccessful. Make sure your username and password are correct!" ) );
+
+									}
 
 								} )
+								.withOptionalArguments( new StringArgument( "mcUser" )
+										.executes( ( sender, args ) -> {
+											try {
+												String wikiUsername = args.rawArgs()[ 0 ];
+												String wikiPassword = args.rawArgs()[ 1 ];
+												String mcUsername = args.rawArgs()[ 2 ];
+
+												if ( WCCommandWikiLogin.requestLogin( sender, mcUsername, wikiUsername, wikiPassword ) ) {
+													sender.sendMessage( WCMessages.message( "info", "Login successful! Welcome, " + wikiUsername + "!" ) );
+
+												} else {
+													sender.sendMessage( WCMessages.message( "error", "Login unsuccessful. Make sure your username and password are correct!" ) );
+
+												}
+											} catch ( Exception e ) {
+												WCMessages.debug( "error", e.getMessage());
+
+											}
+										}))
 						),
 				// /wiki reload
 				new CommandAPICommand( "reload" )

@@ -119,4 +119,14 @@ public class WCFileAccountBridge {
 
 	}
 
+	public static String formatStringUUIDToString(String uuid ) {
+		return String.format( "%s-%s-%s-%s-%s", uuid.substring( 0, 8 ), uuid.substring( 8, 12 ), uuid.substring( 12, 16 ), uuid.substring( 16, 20 ), uuid.substring( 20, 32 ) );
+
+	}
+
+	public static UUID formatStringUUIDToUUID( String uuid ) {
+		return UUID.fromString( formatStringUUIDToString( uuid ) );
+
+	}
+
 }
