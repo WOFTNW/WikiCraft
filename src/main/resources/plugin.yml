@@ -13,9 +13,14 @@ permissions:
     description: Gives access to all WikiCraft commands
     default: op
     children:
-      wikicraft.config: true
-      wikicraft.help: true
-      wikicraft.search: true
+      - wikicraft.config
+      - wikicraft.user
+  wikicraft.user:
+    description: Allows access to the wiki
+    default: true
+    children:
+      - wikicraft.help
+      - wikicraft.search
   wikicraft.config:
     description: Allows access to all WikiCraft configuration
   wikicraft.disable:

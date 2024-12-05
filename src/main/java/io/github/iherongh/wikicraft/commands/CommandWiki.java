@@ -53,9 +53,16 @@ public class CommandWiki {
 
 							}
 
-							sender.sendMessage( "Disabling WikiCraft..." );
+							if ( sender != null ) { sender.sendMessage( "Disabling WikiCraft..." ); }
 							WikiCraft.disableWikiCraft();
-							sender.sendMessage( "WikiCraft disabled." );
+                            if ( sender != null ) { sender.sendMessage( "WikiCraft disabled." ); }
+                        } ),
+				// /wiki login
+				new CommandAPICommand( "login" )
+						.withPermission( CommandPermission.fromString( "wikicraft.user" ) )
+						.executes( ( sender, args ) -> {
+							sender.sendMessage( "/wiki login" );
+							sender.sendMessage( args.rawArgs() );
 						} ),
 				// /wiki reload
 				new CommandAPICommand( "reload" )
@@ -65,10 +72,16 @@ public class CommandWiki {
 						} ),
 				// /wiki search
 				new CommandAPICommand( "search" )
+						.withArguments( new StringArgument( "query" ) )
 						.executes( ( sender, args ) -> {
-							sender.sendMessage( "/wiki search" );
-							sender.sendMessage( args.rawArgs() );
-						} )
+                            try {
+								for ( String result : CommandWikiSearch.searchWiki( args.rawArgs()[ 0 ] ) ) {
+									sender.sendMessage( result );
+								}
+							} catch ( Exception e ) {
+								WikiCraft.getInstance().getLogger().warning( "Failed to execute command: " + e.getMessage() );
+							}
+                        } )
 		);
 
 	}

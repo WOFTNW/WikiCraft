@@ -18,6 +18,16 @@ public class ConfigUtils {
 
 	}
 
+	public static String getWikiURL() {
+		if ( configFile.get( "wiki-url" ) instanceof String returnVal ) {
+			return returnVal;
+
+		}
+
+		return "Configured URL unrecognised.";
+
+	}
+
 	public String getConfigContent( String findKey, MemorySection search ) {
 		WikiCraft.getInstance().getLogger().info( findKey );
 
