@@ -9,124 +9,125 @@ import java.util.Map;
 import java.util.UUID;
 
 public class WCFileAccountBridge {
-	
-	private static final File accountsFile = new File( WikiCraft.getInstance().getDataFolder().getPath() + "/account_bridge.txt" );
 
-	private static final Map<UUID, String> uuidToWikiUser = new HashMap<>();
-	private static final Map<String, UUID> wikiUserToUUID = new HashMap<>();
+    private static final File accountsFile = new File( WikiCraft.getInstance().getDataFolder().getPath() + "/account_bridge.txt" );
 
-	public static File getAccountsFile() {
-		return accountsFile;
-		
-	}
+    private static final Map<UUID, String> uuidToWikiUser = new HashMap<>();
+    private static final Map<String, UUID> wikiUserToUUID = new HashMap<>();
 
-	public static Map<String, UUID> getWikiUserToUUIDMap() {
-		return wikiUserToUUID;
+    public static File getAccountsFile() {
+        return accountsFile;
 
-	}
+    }
 
-	public static Map<UUID, String> getUuidToWikiUserMap() {
-		return uuidToWikiUser;
+    public static Map<String, UUID> getWikiUserToUUIDMap() {
+        return wikiUserToUUID;
 
-	}
+    }
 
-	public static void instantiateAccountFile() {
-		if ( !accountsFile.exists() ) {
-			try {
-				accountsFile.createNewFile();
+    public static Map<UUID, String> getUuidToWikiUserMap() {
+        return uuidToWikiUser;
 
-			} catch ( Exception e ) {
-				WCMessages.debug( "warning", "Could not create account bridge file." );
+    }
 
-			}
+    public static void instantiateAccountFile() {
+        if ( !accountsFile.exists() ) {
+            try {
+                accountsFile.createNewFile();
 
-		}
+            } catch ( Exception e ) {
+                WCMessages.debug( "warning", "Could not create account bridge file: " + e.getMessage() );
 
-	}
+            }
 
-	public static String getUUID( String wikiUser ) {
-		try {
-			BufferedReader reader = new BufferedReader( new FileReader( accountsFile ) );
-			String line;
+        }
 
-			while ( ( line = reader.readLine() ) != null ) {
-				String uuid = line.split( "\\|" )[ 0 ];
-				String user = line.split( "\\|" )[ 1 ];
+    }
 
-				if ( user.equals( wikiUser ) ) {
-					WCMessages.debug( "info", "Wiki user " + wikiUser + " found linked to " + uuid );
-					return uuid;
+    public static String getUUID( String wikiUser ) {
+        try {
+            BufferedReader reader = new BufferedReader( new FileReader( accountsFile ) );
+            String line;
 
-				}
+            while ( ( line = reader.readLine() ) != null ) {
+                String uuid = line.split( "\\|" )[ 0 ];
+                String user = line.split( "\\|" )[ 1 ];
 
-			}
-			reader.close();
-			return WCMessages.message( "error", "No user matches UUID " + wikiUser ).toString();
+                if ( user.equals( wikiUser ) ) {
+                    WCMessages.debug( "info", "Wiki user " + wikiUser + " found linked to " + uuid );
+                    return uuid;
 
-		} catch ( Exception e ) {
-			WCMessages.debug( "warning", "Error reading to file: " + e.getMessage() );
+                }
 
-		}
-		return "";
+            }
+            reader.close();
+            return WCMessages.message( "error", "No user matches UUID " + wikiUser ).toString();
 
-	}
-	
-	public static String getWikiUser( UUID uuid ) {
-		try {
-			BufferedReader reader = new BufferedReader( new FileReader( accountsFile ) );
-			String line;
+        } catch ( Exception e ) {
+            WCMessages.debug( "warning", "Error reading to file: " + e.getMessage() );
 
-			while ( ( line = reader.readLine() ) != null ) {
-				String wikiUser = line.split( "\\|", 2 )[ 1 ];
+        }
+        return "";
 
-				WCMessages.debug( "info", wikiUser);
-				if ( line.contains( uuid.toString() ) ) {
-					WCMessages.debug( "info", "Wiki user " + wikiUser + " found linked to " + uuid );
-					return wikiUser;
+    }
 
-				}
+    public static String getWikiUser( UUID uuid ) {
+        try {
+            BufferedReader reader = new BufferedReader( new FileReader( accountsFile ) );
+            String line;
 
-			}
-			return WCMessages.message( "error", "No user matches UUID " + uuid ).toString();
+            while ( ( line = reader.readLine() ) != null ) {
+                String wikiUser = line.split( "\\|", 2 )[ 1 ];
 
-		} catch ( Exception e ) {
-			WCMessages.debug( "warning", "Error reading the file: " + e.getMessage() );
+                WCMessages.debug( "info", wikiUser );
+                if ( line.contains( uuid.toString() ) ) {
+                    WCMessages.debug( "info", "Wiki user " + wikiUser + " found linked to " + uuid );
+                    return wikiUser;
 
-		}
-		return "";
+                }
 
-	}
+            }
 
-	public static boolean addLink( UUID uuid, String username ) {
-		if ( !accountsFile.exists() ) { instantiateAccountFile(); }
+        } catch ( Exception e ) {
+            WCMessages.debug( "warning", "Error reading the file: " + e.getMessage() );
 
-		try {
-			BufferedWriter writer = new BufferedWriter( new FileWriter( accountsFile ) );
-			writer.write( uuid.toString() + "|" + username );
-			writer.newLine();
-			writer.close();
+        }
 
-			uuidToWikiUser.put( uuid, username );
-			wikiUserToUUID.put( username, uuid );
+        return null;
 
-			return true;
+    }
 
-		} catch ( Exception e ) {
-			WCMessages.debug( "warning", "Error writing to file: " + e.getMessage() );
+    public static boolean addLink( UUID uuid, String username ) {
+        if ( !accountsFile.exists() )
+            instantiateAccountFile();
 
-		}
-		return false;
+        try {
+            BufferedWriter writer = new BufferedWriter( new FileWriter( accountsFile ) );
+            writer.write( uuid.toString() + "|" + username );
+            writer.newLine();
+            writer.close();
 
-	}
+            uuidToWikiUser.put( uuid, username );
+            wikiUserToUUID.put( username, uuid );
 
-	public static String formatStringUUIDToString(String uuid ) {
-		return String.format( "%s-%s-%s-%s-%s", uuid.substring( 0, 8 ), uuid.substring( 8, 12 ), uuid.substring( 12, 16 ), uuid.substring( 16, 20 ), uuid.substring( 20, 32 ) );
+            return true;
 
-	}
+        } catch ( Exception e ) {
+            WCMessages.debug( "warning", "Error writing to file: " + e.getMessage() );
 
-	public static UUID formatStringUUIDToUUID( String uuid ) {
-		return UUID.fromString( formatStringUUIDToString( uuid ) );
+        }
+        return false;
 
-	}
+    }
+
+    public static String formatStringUUIDToString( String uuid ) {
+        return String.format( "%s-%s-%s-%s-%s", uuid.substring( 0, 8 ), uuid.substring( 8, 12 ), uuid.substring( 12, 16 ), uuid.substring( 16, 20 ), uuid.substring( 20, 32 ) );
+
+    }
+
+    public static UUID formatStringUUIDToUUID( String uuid ) {
+        return UUID.fromString( formatStringUUIDToString( uuid ) );
+
+    }
 
 }

@@ -5,9 +5,9 @@
 # Option:
 #   - Any valid MediaWiki URL
 #
-# Default: https://example.com/wiki
+# Default: example.com
 
-wiki-url: "https://example.com/wiki/"
+wiki-url: "example.com"
 
 # Maximum number of search results to display
 #
