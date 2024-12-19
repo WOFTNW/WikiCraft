@@ -7,28 +7,3 @@ description: Integrates MediaWiki searching into Minecraft.
 
 libraries:
   - io.github.fastily:jwiki:1.11.0
-
-permissions:
-  wikicraft.*:
-    description: Gives access to all WikiCraft commands
-    default: op
-    children:
-      - wikicraft.config
-      - wikicraft.user
-  wikicraft.user:
-    description: Allows access to the wiki
-    default: true
-    children:
-      - wikicraft.help
-      - wikicraft.search
-  wikicraft.config:
-    description: Allows access to all WikiCraft configuration
-  wikicraft.disable:
-    description: Allows the user to disable WikiCraft
-    default: op
-  wikicraft.help:
-    description: Allows access to the WikiCraft help page
-  wikicraft.reload:
-    description: Allows access to reloading the WikiCraft plugin
-  wikicraft.search:
-    description: Allows access to search through the configured wiki

@@ -2,9 +2,9 @@ package io.github.iherongh.wikicraft;
 
 import dev.jorel.commandapi.CommandAPI;
 import dev.jorel.commandapi.CommandAPIBukkitConfig;
+import io.github.iherongh.wikicraft.account.WCAccountBridge;
 import io.github.iherongh.wikicraft.commands.WCCommandWiki;
 import io.github.iherongh.wikicraft.config.WCConfigDefault;
-import io.github.iherongh.wikicraft.file.WCFileAccountBridge;
 import io.github.iherongh.wikicraft.messages.WCMessages;
 import io.github.iherongh.wikicraft.wiki.WCWiki;
 import net.kyori.adventure.text.Component;
@@ -12,15 +12,18 @@ import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.util.RGBLike;
 import org.bukkit.Bukkit;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public final class WikiCraft extends JavaPlugin {
+public class WikiCraft extends JavaPlugin {
 
-    public static final RGBLike PRIMARY = TextColor.color( 54, 179, 160 );
-    public static final RGBLike SECONDARY = TextColor.color( 21, 101, 107 );
-    public static final RGBLike TERTIARY = TextColor.color( 18, 55, 54 );
-    public static final RGBLike TEXT_INFO = TextColor.color( 191, 218, 207 );
+    /**
+     * Defines the color scheme constants for WikiCraft.
+     * These colors are used throughout the plugin for consistent visual styling.
+     */
+    public static final RGBLike PRIMARY = TextColor.color( 85, 191, 173 );
+    public static final RGBLike SECONDARY = TextColor.color( 51, 141, 143 );
+    public static final RGBLike TERTIARY = TextColor.color( 27, 68, 66 );
+    public static final RGBLike TEXT_INFO = TextColor.color( 199, 227, 216 );
     public static final RGBLike TEXT_ERROR = TextColor.color( 82, 53, 234 );
 
     public static TextComponent PREFIX = Component.text( "[" ).color( TextColor.color( TERTIARY ) )
@@ -32,29 +35,53 @@ public final class WikiCraft extends JavaPlugin {
         .append( Component.text( "C" ).color( TextColor.color( SECONDARY ) ) )
         .append( Component.text( "] " ).color( TextColor.color( TERTIARY ) ) );
 
-    private static Plugin instance;
+    private static WikiCraft instance;
 
     public WikiCraft() {
         instance = this;
 
     }
-
-    public static Plugin getInstance() {
+    
+    /**
+     * Retrieves the singleton instance of the WikiCraft plugin.
+     * This method provides global access to the plugin instance throughout the application.
+     * <br><br>
+     * @return The single instance of the WikiCraft plugin.
+     */
+    public static WikiCraft getInstance() {
         return instance;
-
+        
     }
 
+    /**
+     * Disables the WikiCraft plugin and performs necessary cleanup operations.
+     * <br><br>
+     * Attempts to unregister the 'wiki' command, disable the CommandAPI,
+     * and then disable the WikiCraft plugin itself.
+     */
     public static void disableWikiCraft() {
         try {
             WCMessages.debug( "info", "Disabling WikiCraft..." );
             CommandAPI.unregister( "wiki" );
             CommandAPI.onDisable();
-            Bukkit.getPluginManager().disablePlugin( instance );
+            Bukkit.getPluginManager().disablePlugin( getInstance() );
 
         } catch ( Exception e ) {
             WCMessages.debug( "severe", "Unable to disable WikiCraft: " + e.getMessage() );
 
         }
+
+    }
+
+    /**
+     * Handles the disabling of WikiCraft.
+     * This method is called when the plugin is being disabled, typically during server shutdown
+     * or when the plugin is manually disabled, logging a message indicating a successful disable.
+     */
+    @Override
+    public void onDisable() {
+        // Declare successful disable
+        WCMessages.debug( "info", "WikiCraft successfully disabled." );
 
     }
 
@@ -74,7 +101,7 @@ public final class WikiCraft extends JavaPlugin {
             CommandAPI.onEnable();
 
             // Register commands
-            registerCommands();
+            registerCommand();
 
             // Build wiki on initialisation
             WCWiki.buildWiki();
@@ -88,13 +115,6 @@ public final class WikiCraft extends JavaPlugin {
             throw new RuntimeException( e );
 
         }
-
-    }
-
-    @Override
-    public void onDisable() {
-        // Declare successful disable
-        WCMessages.debug( "info", "WikiCraft successfully disabled." );
 
     }
 
@@ -121,7 +141,7 @@ public final class WikiCraft extends JavaPlugin {
         WCMessages.debug( "info", "Attempting to load account bridge..." );
 
         try {
-            WCFileAccountBridge.instantiateAccountFile();
+            WCAccountBridge.instantiateAccountFile();
             WCMessages.debug( "info", "Account bridge file successfully loaded." );
 
         } catch ( Exception e ) {
@@ -131,7 +151,7 @@ public final class WikiCraft extends JavaPlugin {
 
     }
 
-    private void registerCommands() {
+    private void registerCommand() {
         WCMessages.debug( "info", "Registering commands..." );
 
         try {
@@ -141,7 +161,6 @@ public final class WikiCraft extends JavaPlugin {
             WCMessages.debug( "warning", "/wiki was unable to register: " + e.getMessage() );
 
         }
-
         WCMessages.debug( "info", "Commands registered successfully." );
 
     }

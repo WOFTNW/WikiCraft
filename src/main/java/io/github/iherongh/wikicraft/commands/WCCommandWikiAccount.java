@@ -1,166 +1,149 @@
 package io.github.iherongh.wikicraft.commands;
 
 import dev.jorel.commandapi.CommandAPICommand;
-import dev.jorel.commandapi.arguments.GreedyStringArgument;
-import dev.jorel.commandapi.arguments.StringArgument;
+import dev.jorel.commandapi.arguments.MultiLiteralArgument;
 import dev.jorel.commandapi.arguments.TextArgument;
-import io.github.iherongh.wikicraft.file.WCFileAccountBridge;
+import io.github.iherongh.wikicraft.account.WCAccountBridge;
 import io.github.iherongh.wikicraft.messages.WCMessages;
 import io.github.iherongh.wikicraft.wiki.WCWiki;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.shanerx.mojang.Mojang;
+
+import java.util.Collection;
+import java.util.UUID;
 
 public class WCCommandWikiAccount {
 
     public static CommandAPICommand getCommand() {
-        // /wiki account <getPlayer|getWikiUser|login|refresh>
+        // /wiki account <get|list|login|refresh>
         return new CommandAPICommand( "account" ).withSubcommands(
-            // /wiki account getToken
-            getTokenSubcommand(),
+            // /wiki account get
+            getSubcommand(),
 
-            // /wiki account getPlayer
-            getPlayerSubcommand(),
-
-            // /wiki account getWikiUser
-            getWikiUserSubcommand(),
+            // /wiki account list
+            listSubcommand(),
 
             // /wiki account login
             loginSubcommand(),
 
             // /wiki account refresh
             refreshSubcommand()
+
         );
     }
 
-    public static CommandAPICommand getTokenSubcommand() {
-        return new CommandAPICommand( "getToken" )
-            // /wiki account getToken
-            .executes( ( sender, args ) -> {
+    public static CommandAPICommand getSubcommand() {
+        return new CommandAPICommand( "get" )
+            .withOptionalArguments( new MultiLiteralArgument( "fetch", "player", "token", "wikiUser" )
+                .combineWith( WCCommandWiki.playerNameArgument( false ) )
+            )
+            .executesPlayer( ( player, args ) -> {
                 try {
-                    sender.sendMessage( WCWiki.getLoginToken() );
+                    switch ( (String) args.get( "fetch" ) ) {
+                        case null:
+                            player.sendMessage( WCMessages.message( "info", getWikiUsers().toString() ) );
+                            break;
+                        case "player":
+                            player.sendMessage( WCMessages.message( "info", WCAccountBridge.getUUID( (String) args.get( "name" ) ) ) );
+                            break;
+                        case "token":
+                            player.sendMessage( WCMessages.message( "info", "Requested token." ) );
+                            break;
+                        case "wikiUser":
+                            player.sendMessage( WCMessages.message( "info", WCAccountBridge.getWikiUser( (Player) args.get( "name" ) ) ) );
+                            break;
+                        default:
+                            player.sendMessage( WCMessages.message( "error", "Unexpected value: " + args.get( "fetch" ) ) );
+
+                    }
+                    player.sendMessage( WCMessages.message( "info", args.fullInput() ) );
 
                 } catch ( Exception e ) {
-                    sender.sendMessage( WCMessages.message( "error", "Error: " + e.getMessage() ) );
-                }
-            } );
-    }
+                    WCMessages.throwError( e, player );
 
-    public static CommandAPICommand getPlayerSubcommand() {
-        return new CommandAPICommand( "getPlayer" )
-            // /wiki account getPlayer <wiki_username>
-            .withArguments( new GreedyStringArgument( "wiki_user" ) )
-            .executes( ( sender, args ) -> {
-                String username = args.rawArgs()[ 0 ];
-                sender.sendMessage( new Mojang().connect().getPlayerProfile( WCFileAccountBridge.getUUID( username ) ).getUsername() );
+                }
+
             } );
 
     }
 
-    public static CommandAPICommand getWikiUserSubcommand() {
-        return new CommandAPICommand( "getWikiUser" )
-            // /wiki account getWikiUser <mc_username>
-            .withArguments( new StringArgument( "username" ) )
-            .executes( ( sender, args ) -> {
-                String username = args.rawArgs()[ 0 ];
-                String uuid = new Mojang().connect().getUUIDOfUsername( username );
-                if ( WCFileAccountBridge.getWikiUser( WCFileAccountBridge.formatStringUUIDToUUID( uuid ) ).equals( username ) ) {
-                    sender.sendMessage( WCMessages.message( "error", "" ) );
+    private static CommandAPICommand listSubcommand() {
+        return new CommandAPICommand( "list" )
+            .executesPlayer( ( player, args ) -> {
+                try {
+                    player.sendMessage( WCMessages.message( "info", args.fullInput() ) );
 
-                } else {
-                    sender.sendMessage( WCMessages.message( "error", "No user matches UUID " + uuid + "." ) );
+                } catch ( Exception e ) {
+                    WCMessages.throwError( e );
 
                 }
-            } );
 
+            } );
     }
 
     private static CommandAPICommand loginSubcommand() {
         // /wiki account login <username> <password>
         return new CommandAPICommand( "login" )
             .withArguments( new TextArgument( "wikiUsername" ), new TextArgument( "wikiPassword" ) )
-            .executes( ( sender, args ) -> {
-                String wikiUsername = args.rawArgs()[ 0 ];
-                String wikiPassword = args.rawArgs()[ 1 ];
+            .executesPlayer( ( player, args ) -> {
+                try {
+                    UUID uuid = player.getUniqueId();
+                    String mcUsername = player.getName();
+                    String wikiUsername = (String) args.get( "wikiUsername" );
+                    String wikiPassword = (String) args.get( "wikiPassword" );
 
-                if ( requestLogin( sender, wikiUsername, wikiPassword ) ) {
-                    sender.sendMessage( WCMessages.message( "info", "Login successful! Welcome, " + wikiUsername + "!" ) );
+                    if ( WCWiki.getWiki().login( wikiUsername, wikiPassword ) ) {
+                        player.sendMessage( WCMessages.message( "info", "Successfully logged in as " + wikiUsername + "!" ) );
 
-                } else {
-                    sender.sendMessage( WCMessages.message( "error", "Unable to login! Double check login details." ) );
-
-                }
-
-            } )
-            // /wiki account login <username> <password> [mcUser]
-            .withOptionalArguments( new StringArgument( "mcUsername" )
-                .executes( ( sender, args ) -> {
-                    try {
-                        String wikiUsername = args.rawArgs()[ 0 ];
-                        String wikiPassword = args.rawArgs()[ 1 ];
-                        String mcUsername = args.rawArgs()[ 2 ];
-
-                        if ( requestLogin( sender, mcUsername, wikiUsername, wikiPassword ) ) {
-                            sender.sendMessage( WCMessages.message( "info", "Login successful!" ) );
+                        if ( WCAccountBridge.addLink( uuid, wikiUsername ) ) {
+                            WCMessages.debug( "info", "Account " + mcUsername + " linked to " + wikiUsername + "." );
+                            player.sendMessage( WCMessages.message( "info", "Account " + mcUsername + " linked to " + wikiUsername + "!" ) );
 
                         } else {
-                            sender.sendMessage( WCMessages.message( "error", "Unable to login! Double check login details." ) );
+                            WCMessages.debug( "error", "Unable to link account!" );
+                            player.sendMessage( WCMessages.message( "error", "Unable to link accounts!" ) );
 
                         }
 
-                    } catch ( Exception e ) {
-                        WCMessages.debug( "error", e.getMessage() );
+                    } else {
+                        WCMessages.debug( "info", mcUsername + " attempted login to account " + wikiUsername );
+                        player.sendMessage( WCMessages.message( "error", "Unable to log in! Check you account details." ) );
 
                     }
 
-                } ) );
-    }
+                } catch ( Exception e ) {
+                    WCMessages.throwError( e, player );
 
-    private static CommandAPICommand refreshSubcommand() {
-        // /wiki account refresh <password>
-        return new CommandAPICommand( "refresh" )
-            .withArguments( new StringArgument( "password" ) )
-            .executes( ( sender, args ) -> {
-                if ( refreshLogin() ) {
-                    sender.sendMessage( WCMessages.message( "info", "Login successful!" ) );
+                }
+            } )
+            .executesConsole( ( console, args ) -> {
+                try {
+                    console.sendMessage( WCMessages.message( "info", "Unable to log in to the wiki from the console." ) );
 
-                } else {
-                    sender.sendMessage( WCMessages.message( "info", "Unable to login! Double check login details." ) );
+                } catch ( Exception e ) {
+                    WCMessages.throwError( e, console );
 
                 }
 
             } );
     }
 
-    public static boolean requestLogin( CommandSender sender, String wikiUsername, String wikiPassword ) {
-        if ( sender instanceof Player player ) {
-            return requestLogin( sender, player.getName(), wikiUsername, wikiPassword );
+    private static CommandAPICommand refreshSubcommand() {
+        // /wiki account refresh <password>
+        return new CommandAPICommand( "refresh" )
+            .executesPlayer( ( player, args ) -> {
+                try {
+                    player.sendMessage( WCMessages.message( "info", args.fullInput() ) );
 
-        } else {
-            return requestLogin( sender, null, wikiUsername, wikiPassword );
+                } catch ( Exception e ) {
+                    WCMessages.throwError( e, player );
 
-        }
+                }
 
+            } );
     }
 
-    public static boolean requestLogin( CommandSender sender, String mcUsername, String wikiUsername, String wikiPassword ) {
-        wikiUsername = wikiUsername.replace( "\"", "" );
-        wikiPassword = wikiPassword.replace( "\"", "" );
-
-        if ( !WCWiki.getWiki().login( wikiUsername, wikiPassword ) ) {
-            WCMessages.debug( "info", "Login unsuccessful under username " + wikiUsername );
-            return false;
-
-        }
-
-        WCMessages.debug( "info", "Login successful under username " + wikiUsername );
-
-        return true;
-
-    }
-
-    public static boolean refreshLogin() {
-        return ( WCWiki.getWiki().whoami() == null || WCWiki.getWiki().whoami().isEmpty() );
+    private static Collection<String> getWikiUsers() {
+        return WCAccountBridge.getUUIDToWikiUserMap().values();
 
     }
 

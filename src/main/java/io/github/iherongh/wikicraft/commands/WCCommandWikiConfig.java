@@ -7,22 +7,46 @@ public class WCCommandWikiConfig {
 
     public static CommandAPICommand getCommand() {
         return new CommandAPICommand( "config" ).withSubcommands(
+
             // /wiki config get
-            new CommandAPICommand( "get" ).withOptionalArguments( new StringArgument( "key" ) ).executes( ( sender, args ) -> {
-                sender.sendMessage( "/wiki config get" );
-                sender.sendMessage( args.rawArgs() );
-            } ),
+            getSubcommand(),
+
             // /wiki config reload
-            new CommandAPICommand( "reload" ).executes( ( sender, args ) -> {
-                sender.sendMessage( "/wiki config reload" );
-                sender.sendMessage( args.rawArgs() );
-            } ),
+            reloadSubcommand(),
+
             // /wiki config set
-            new CommandAPICommand( "set" ).executes( ( sender, args ) -> {
+            setSubcommand()
+
+        );
+
+    }
+
+    public static CommandAPICommand getSubcommand() {
+        return new CommandAPICommand( "get" ).withOptionalArguments( new StringArgument( "key" ) )
+            .executes( ( sender, args ) -> {
+                sender.sendMessage( args.fullInput() );
+                sender.sendMessage( args.rawArgs() );
+
+            } );
+
+    }
+
+    private static CommandAPICommand reloadSubcommand() {
+        return new CommandAPICommand( "reload" )
+            .executes( ( sender, args ) -> {
+                sender.sendMessage( args.fullInput() );
+                sender.sendMessage( args.rawArgs() );
+
+            } );
+    }
+
+    private static CommandAPICommand setSubcommand() {
+        return new CommandAPICommand( "set" )
+            .executes( ( sender, args ) -> {
                 sender.sendMessage( "/wiki config set" );
                 sender.sendMessage( args.rawArgs() );
-            } ) );
 
+            } );
     }
 
 }
