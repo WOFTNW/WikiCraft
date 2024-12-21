@@ -3,7 +3,6 @@ package io.github.iherongh.wikicraft.wiki;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import io.github.fastily.jwiki.core.Wiki;
-import io.github.iherongh.wikicraft.config.WCConfigUtils;
 import io.github.iherongh.wikicraft.messages.WCMessages;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
@@ -50,7 +49,8 @@ public class WCWiki {
      */
     public static Wiki buildWiki() {
         try {
-            String wikiUrl = WCConfigUtils.getWikiURL();
+//            String wikiUrl = WCConfigUtils.getWikiURL();
+            String wikiUrl = "wiki.woftnw.org";
             if ( wikiUrl == null || wikiUrl.isEmpty() ) {
                 WCMessages.debug( "warning", "Wiki URL is not set correctly in the configuration file." );
                 return getWiki();
