@@ -5,7 +5,11 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.command.CommandSender;
+import org.jetbrains.annotations.NotNull;
 
+/**
+ * Handles message formatting and delivery.
+ */
 public class WCMessages {
 
     /**
@@ -23,16 +27,121 @@ public class WCMessages {
      *              <br>
      * @param msg   The content of the message to be formatted.
      * @return      A <code>Component</code> object representing the formatted message.
+     *
+     * @since 0.1.0
      *              The returned component includes the WikiCraft prefix and
      *              the message with appropriate coloring based on the level.
      *              For unknown levels, it returns an unknown severity
      *              specified error alongside the message.
      */
-    public static Component message( String level, String msg ) {
+    public static @NotNull Component message( @NotNull String level, String msg ) {
+        return message( level, msg, true );
+
+    }
+
+    /**
+     * Creates a formatted message component based on the specified level and message.
+     *
+     * @param level         The severity level of the message.
+     *                      <br>
+     *                      Accepted values are:
+     *                      <br>
+     *                      <code>info</code> - for informational messages
+     *                      <br>
+     *                      <code>error</code> - for error messages
+     *                      <br>
+     *                      Any other value will be treated as an unknown level.
+     *                      <br>
+     * @param msg           The content of the message to be formatted.
+     * @param includePrefix Whether to include the WikiCraft prefix in the message or not.
+     *
+     * @return A <code>Component</code> object representing the formatted message.
+     *
+     * @since 0.1.0 The returned component includes the WikiCraft prefix and the message with appropriate coloring based
+     * on the level. For unknown levels, it returns an unknown severity specified error alongside the message.
+     */
+    public static @NotNull Component message( @NotNull String level, String msg, boolean includePrefix ) {
+        if ( includePrefix ) {
+            return switch ( level ) {
+                case "info" -> WikiCraft.PREFIX.append( Component.text( msg ).color( TextColor.color( WikiCraft.TEXT_INFO ) ) );
+                case "error" -> WikiCraft.PREFIX.append( Component.text( msg ).color( TextColor.color( WikiCraft.TEXT_ERROR ) ) );
+                default -> Component.text( "Unknown severity specified: " ).color( TextColor.color( NamedTextColor.DARK_RED ) ).append( Component.text( msg ).color( TextColor.color( WikiCraft.TEXT_ERROR ) ) );
+
+            };
+
+        }
+
         return switch ( level ) {
-            case "info" -> WikiCraft.PREFIX.append( Component.text( msg ).color( TextColor.color( WikiCraft.TEXT_INFO ) ) );
-            case "error" -> WikiCraft.PREFIX.append( Component.text( msg ).color( TextColor.color( WikiCraft.TEXT_ERROR ) ) );
+            case "info" -> Component.text( msg ).color( TextColor.color( WikiCraft.TEXT_INFO ) );
+            case "error" -> Component.text( msg ).color( TextColor.color( WikiCraft.TEXT_ERROR ) );
             default -> Component.text( "Unknown severity specified: " ).color( TextColor.color( NamedTextColor.DARK_RED ) ).append( Component.text( msg ).color( TextColor.color( WikiCraft.TEXT_ERROR ) ) );
+
+        };
+
+    }
+
+    /**
+     * Creates a formatted message component based on the specified level and message.
+     *
+     * @param level The severity level of the message.
+     *              <br>
+     *              Accepted values are:
+     *              <br>
+     *              <code>info</code> - for informational messages
+     *              <br>
+     *              <code>error</code> - for error messages
+     *              <br>
+     *              Any other value will be treated as an unknown level.
+     *              <br>
+     * @param msg   The content of the message to be formatted.
+     * @return      A <code>Component</code> object representing the formatted message.
+     *
+     * @since 0.1.0
+     *              The returned component includes the WikiCraft prefix and
+     *              the message with appropriate coloring based on the level.
+     *              For unknown levels, it returns an unknown severity
+     *              specified error alongside the message.
+     */
+    public static @NotNull Component message( @NotNull String level, Component msg ) {
+        return message( level, msg, true );
+    }
+
+    /**
+     * Creates a formatted message component based on the specified level and message.
+     *
+     * @param level         The severity level of the message.
+     *                      <br>
+     *                      Accepted values are:
+     *                      <br>
+     *                      <code>info</code> - for informational messages
+     *                      <br>
+     *                      <code>error</code> - for error messages
+     *                      <br>
+     *                      Any other value will be treated as an unknown level.
+     *                      <br>
+     * @param msg           The content of the message to be formatted.
+     * @param includePrefix Whether to include the WikiCraft prefix in the message or not.
+     *
+     * @return A <code>Component</code> object representing the formatted message.
+     *
+     * @since 0.1.0 The returned component includes the WikiCraft prefix and the message with appropriate coloring based
+     * on the level. For unknown levels, it returns an unknown severity specified error alongside the message.
+     */
+    public static @NotNull Component message( @NotNull String level, Component msg, boolean includePrefix ) {
+        if ( includePrefix ) {
+            return switch ( level ) {
+                case "info" -> WikiCraft.PREFIX.append( msg.color( TextColor.color( WikiCraft.TEXT_INFO ) ) );
+                case "error" -> WikiCraft.PREFIX.append( msg.color( TextColor.color( WikiCraft.TEXT_ERROR ) ) );
+                default -> Component.text( "Unknown severity specified: " ).color( TextColor.color( NamedTextColor.DARK_RED ) ).append( msg.color( TextColor.color( WikiCraft.TEXT_ERROR ) ) );
+
+            };
+
+        }
+
+        return switch ( level ) {
+            case "info" -> msg.color( TextColor.color( WikiCraft.TEXT_INFO ) );
+            case "error" -> msg.color( TextColor.color( WikiCraft.TEXT_ERROR ) );
+            default -> Component.text( "Unknown severity specified: " ).color( TextColor.color( NamedTextColor.DARK_RED ) ).append( msg.color( TextColor.color( WikiCraft.TEXT_ERROR ) ) );
 
         };
 
@@ -45,26 +154,18 @@ public class WCMessages {
      * @param level The severity level of the debug message.
      *              <br>
      *              Accepted values are:
-     *              <br>
-     *              <code>info</code> - informational messages
-     *              <br>
-     *              <code>warning</code> - warning messages
-     *              <br>
-     *              <code>severe</code> - severe error messages
-     *              <br>
+     *              <ul>
+     *                  <li><code>info</code> - informational messages
+     *                  <li><code>warning</code> - warning messages
+     *                  <li><code>severe</code> - severe error messages
+     *              </ul>
      * @param msg   The debug message to be logged.
      */
     public static void debug( String level, String msg ) {
-        switch ( level ) {
-            case "info":
-                WikiCraft.getInstance().getLogger().info( msg );
-                break;
-            case "warning":
-                WikiCraft.getInstance().getLogger().warning( msg );
-                break;
-            case "severe":
-                WikiCraft.getInstance().getLogger().severe( msg );
-                break;
+        switch ( level.toLowerCase() ) {
+            case "info", "i" -> WikiCraft.getInstance().getLogger().info( msg );
+            case "warning", "w" -> WikiCraft.getInstance().getLogger().warning( msg );
+            case "severe", "s" -> WikiCraft.getInstance().getLogger().severe( msg );
 
         }
 

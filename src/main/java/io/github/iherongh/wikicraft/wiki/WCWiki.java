@@ -1,13 +1,10 @@
 package io.github.iherongh.wikicraft.wiki;
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import io.github.fastily.jwiki.core.Wiki;
-import io.github.iherongh.wikicraft.messages.WCMessages;
-import okhttp3.Response;
-import okhttp3.ResponseBody;
+import java.util.ArrayList;
 
-import java.util.HashMap;
+import io.github.fastily.jwiki.core.Wiki;
+import io.github.iherongh.wikicraft.config.WCConfigUtils;
+import io.github.iherongh.wikicraft.messages.WCMessages;
 
 public class WCWiki {
 
@@ -17,104 +14,74 @@ public class WCWiki {
      * Retrieves the {@link Wiki} instance.
      *
      * @return The {@link Wiki} instance, or null if it hasn't been generated yet.
+     *
+     * @since 0.1.0
      */
     public static Wiki getWiki() {
         if ( wiki == null ) {
-            WCMessages.debug( "info", "Wiki has not been generated! The value of wiki will return as null." );
-            
+            WCMessages.debug( "warning", "No wiki has been generated!" );
+
         }
-        
+
         return wiki;
 
-    }
-    
-    /**
-     * Retrieves information about a specific wiki page.
-     *
-     * @TODO Populate map with page info such as title, categories, outgoing links, contributors, etc.
-     *
-     * @param page The title or name of the wiki page to retrieve information for.
-     * @return A HashMap containing key-value pairs of page information. Currently returns an empty HashMap.
-     */
-    public static HashMap<String, String> getPageInfo( String page ) {
-        HashMap<String, String> map = new HashMap<>();
-        return map;
-        
     }
 
     /**
      * Builds the {@link Wiki} based on the link as set in config.yml.
-     *
-     * @return The built {@link Wiki} instance.
+     * <p>Fails if:
+     * <ul>
+     *     <li>The wiki URL is empty.
+     *     <li>The wiki URL is set to "example.com".
+     *     <li>The account username is empty.
+     *     <li>The account password is empty.
+     * </ul>
      */
-    public static Wiki buildWiki() {
+    public static void buildWiki() {
         try {
-//            String wikiUrl = WCConfigUtils.getWikiURL();
-            String wikiUrl = "wiki.woftnw.org";
-            if ( wikiUrl == null || wikiUrl.isEmpty() ) {
+            WCMessages.debug( "info", "Getting wiki and account information from config.yml..." );
+
+            // Get login and wiki information
+            String wikiUrl = WCConfigUtils.getWikiURL();
+            String wikiUsername = WCConfigUtils.getWikiBotUsername();
+            String wikiPassword = WCConfigUtils.getWikiBotPassword();
+            String header = WCWikiUtils.getHeader();
+
+            // Check if wiki-url key in config.yml is valid
+            WCMessages.debug( "info", "Validating wiki URL..." );
+            if ( wikiUrl == null || wikiUrl.isEmpty() || wikiUrl.equals( "example.com" ) ) {
                 WCMessages.debug( "warning", "Wiki URL is not set correctly in the configuration file." );
-                return getWiki();
+                return;
 
             }
-            wiki = new Wiki.Builder().withDomain( wikiUrl ).build();
+
+            // Check if wiki-bot-username and wiki-bot-password keys in config.yml are valid
+            WCMessages.debug( "info", "Validating login credentials..." );
+            if ( wikiUsername == null || wikiUsername.isEmpty() || wikiPassword == null || wikiPassword.isEmpty() ) {
+                WCMessages.debug( "warning", "Account details are not set correctly in your config! Check the file for errors." );
+                return;
+
+            }
+
+            // Attempt to build wiki with the given information
+            WCMessages.debug( "info", "Building wiki at " + wikiUrl + " as user " + wikiUsername + "..." );
+            wiki = new Wiki.Builder()
+                        // Set the wiki URL, login credentials, and user agent
+                        .withDomain( wikiUrl )
+                        .withLogin( wikiUsername, wikiPassword )
+                        .withUserAgent( header )
+                        .build();
+
+            ArrayList<String> rights = wiki.listUserRights( wikiUsername );
+            WCMessages.debug( "info", "WikiCraft has the following rights: " + rights );
+            
+            // Get the wiki
+            getWiki();
 
         } catch ( Exception e ) {
             WCMessages.debug( "severe", "Unable to build the wiki: " + e.getMessage() );
-
+            
         }
-
-        return getWiki();
-
-    }
-    
-    /**
-     * Retrieves a GET request to the registered wiki's API to obtain a login token for authentication purposes.
-     * <br>
-     * @return A String containing the login token if successful, or an error message.
-     */
-    public static String getLoginToken() {
-        try {
-            // Pull login token from registered wiki
-            ResponseBody response = getWiki().basicGET( "query", "format", "json", "meta", "tokens", "continue", "", "formatversion", "latest", "type", "login" ).body();
-            JsonObject json = JsonParser.parseString( response.string() ).getAsJsonObject();
-            response.close();
-
-            // @todo save the login token to account_bridge.txt
-            return json.getAsJsonObject( "query" ).getAsJsonObject( "tokens" ).get( "logintoken" ).toString();
-
-        } catch ( Exception e ) {
-            return "Error: " + e.getMessage();
-
-        }
-
-    }
-
-    public static boolean validateToken( String token ) {
-        try {
-            // Test the token with a lightweight query
-            ResponseBody response = getWiki().basicGET( "query", "format", "json", "meta", "userinfo", "token", token ).body();
-            JsonObject json = JsonParser.parseString( response.string() ).getAsJsonObject();
-            response.close();
-
-            return !json.has( "error" ); // Check if there's no error in the response
-
-        } catch ( Exception e ) {
-            WCMessages.debug( "error", "Error checking token validity: " + e.getMessage() );
-            return false;
-
-        }
-
-    }
-
-    public static boolean login( String username, String password ) {
-        HashMap<String, String> map = new HashMap<>();
-        map.put( "format", "json" );
-        map.put( "login", "json" );
-        Response response = getWiki().basicPOST( "clientlogin", map );
-
-        response.close();
-
-        return false;
 
     }
 

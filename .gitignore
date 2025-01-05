@@ -1,6 +1,7 @@
 # User-specific stuff
 .idea/
-src/test/
+.vscode/
+.apt_generated
 
 *.iml
 *.ipr
@@ -122,3 +123,4 @@ runs/
 # Ignore SyncThing files
 /.stfolder
 WikiCraft.run.xml
+/bin

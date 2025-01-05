@@ -1,71 +1,129 @@
-# WikiCraft Configuration
+# --------------------------------------- #
+#                                         #
+#         WikiCraft Configuration         #
+#                                         #
+# --------------------------------------- #
 
-# The base URL of your wiki
+# The base URL of your wiki.
 #
 # Option:
 #   - Any valid MediaWiki URL
 #
 # Default: example.com
 
-wiki-url: "example.com"
+wiki-url: 'example.com'
 
-# Maximum number of search results to display
+# The login details for WikiCraft's account.
+#
+# If this is not set, WikiCraft will not function. In order to create a valid bot account, do the following:
+#   1. Log in to the wiki as an administrator
+#   2. Go to the wiki's Special:CreateAccount page ( https://example.com/Special:CreateAccount )
+#   3. Create a new account using the following information:
+#      - Username: Username listed below
+#      - Password: Password listed below
+#      - Email: <any valid email address> (WikiCraft does not see or use this email address)
+#      - Real Name: (optional, "WikiCraftBot" is recommended)
+#      - Reason for account: (optional, "WikiCraftBot initial creation" is recommended)
+#   4. Go to your wiki's User Rights page ( https://example.com/Special:UserRights/WikiCraftBot )
+#   5. Give the bot account the "bot" and "administrator" rights and save your changes
+#   6. Verify the email address for the bot account ( https://example.com/Special:ConfirmEmail )
+#   7. Follow the instructions in the email to confirm the email address
+#
+# Option:
+#   It is recommended to keep the username as "WikiCraftBot".
+#   - wiki-bot-username: The username of the bot account
+#
+#   Use a strong, secure password for the bot account. Do not reuse this password for any other account,
+#   or reuse other accounts' passwords for this account.
+#   - wiki-bot-password: The password of the bot account
+#
+# Default:
+#   - wiki-bot-username: WikiCraftBot
+#   - wiki-bot-password:
+
+wiki-bot-username: 'WikiCraftBot'
+wiki-bot-password: ''
+
+# Maximum number of search results to display.
 #
 # Options:
-#   - Any integer
+#   - Any integer between 5 and 100
 #
 # Default: 10
 
 max-results: 10
 
+# Minimum amount of time, in seconds, between requests to the wiki.
+# This setting is used to prevent spamming the wiki servers.
+#
+# Options:
+#   - Any integer equal to or greater than 20
+#
+# Default: 20
+
+time-between-actions: 20
+
 # Localisation settings
 #
 # Options:
-#   - en-US (100%)
+#   - Any valid, Minecraft-supported language code
+#     (see a complete list here: https://minecraft.wiki/w/Language#Languages)
+#   - en-us (100%)
 #
-# Default: en-US
+# Default: "en-us"
 
-locale: "en-US"
+locale: en-us
 
 # Message customization
 
 messages:
-  en-US:
+  en-us:
     usage:
-      config: ""
-      disable: ""
-      help: ""
-      reload: ""
-      search: ""
+      config:
+      disable:
+      help:
+      reload:
+      search:
     fail:
       generic:
-        not-enough-args: "Not enough arguments provided!"
-        too-many-args: "Too many arguments provided!"
+        not-enough-args: Not enough arguments provided!
+        too-many-args: Too many arguments provided!
       commands:
         config:
-          not-enough-args: "generic.not-enough-args"
-          too-many-args: "generic.too-many-args"
+          not-enough-args: generic.not-enough-args
+          too-many-args: generic.too-many-args
           get:
-            not-enough-args: "generic.not-enough-args"
-            too-many-args: "generic.too-many-args"
+            not-enough-args: generic.not-enough-args
+            too-many-args: generic.too-many-args
           set:
-            not-enough-args: "generic.not-enough-args"
-            too-many-args: "generic.too-many-args"
+            not-enough-args: generic.not-enough-args
+            too-many-args: generic.too-many-args
         disable:
-          too-many-args: "generic.too-many-args"
+          too-many-args: generic.too-many-args
         help:
-          - "WikiCraft help"
-          - "/wiki"
-          - " ├─ config"
-          - " │  ├─ get <key>"
-          - " │  ├─ reload"
-          - " │  └─ set <key> <value>"
-          - " ├─ help"
-          - " └─ search"
+          - WikiCraft help
+          - /wiki
+          -  ├─ account
+          -  │  ├─ get
+          -  │  ├─ list
+          -  │  ├─ login
+          -  │  └─ refresh
+          -  ├─ config
+          -  │  ├─ get <key>
+          -  │  ├─ reload
+          -  │  └─ set <key> <value>
+          -  ├─ disable
+          -  ├─ reload
+          -  └─ pages
+          -     ├─ add
+          -     ├─ delete
+          -     ├─ edit
+          -     ├─ info
+          -     └─ search
         reload:
-          too-many-args: "generic.too-many-args"
+          too-many-args: generic.too-many-args
         search:
-          not-enough-args: "generic.not-enough-args"
-          too-many-args: "generic.too-many-args"
-          no-results: "There were no results that matched your search query."
-          timed-out: "The request timed out."
+          not-enough-args: generic.not-enough-args
+          too-many-args: generic.too-many-args
+          no-results: There were no results that matched your search query.
+          timed-out: The request timed out.

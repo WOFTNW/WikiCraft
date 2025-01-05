@@ -1,9 +1,328 @@
 name: WikiCraft
-version: '0.1.0-SNAPSHOT'
+version: "0.2.0-SNAPSHOT"
 main: io.github.iherongh.wikicraft.WikiCraft
-api-version: '1.21'
+api-version: "1.21"
 author: iHeron
 description: Integrates MediaWiki searching into Minecraft.
+website: https://github.com/iHerongh/WikiCraft
+issues: https://github.com/iHerongh/WikiCraft/issues
+prefix: WikiCraft
+load: POSTWORLD
+license: MIT
+
+softdepend:
+    - LuckPerms
 
 libraries:
-  - io.github.fastily:jwiki:1.11.0
+    - io.github.fastily:jwiki:1.11.0
+
+permissions:
+    # ============================
+    #       Core Permissions
+    # ============================
+
+    # This section is for the permission node that grants all permissions.
+
+    #   -- All permissions --
+    wikicraft.*:
+        # Referenced in:
+        #   - (root permission node)
+        # Checked in:
+        #   - (all permission checks)
+        description: Grants all WikiCraft permissions
+        default: op
+        children:
+            wikicraft.admin: true
+
+    # ----------------------------------------------------------------------------
+
+    # ============================
+    #       User Permissions
+    # ============================
+
+    # This section is for all permissions granted to specific archetypes of user.
+
+    #   -- Admin permissions --
+    wikicraft.admin:
+        # Referenced in:
+        #   - wikicraft.*
+        # Checked in:
+        #   - (all administrative permission checks)
+        description: Grants full administrative access
+        default: false
+        children:
+            wikicraft.user: true
+
+            wikicraft.command: true
+
+            wikicraft.account.manage: true
+
+            wikicraft.pages.full: true
+
+    #   -- Linked user permissions --
+    wikicraft.user:
+        # Referenced in:
+        #   - wikicraft.admin
+        # Checked in:
+        #   - WCCommandWikiPages.addSubcommand()
+        #   - WCCommandWikiPages.editSubcommand()
+        description: Grants basic user access
+        default: false
+        children:
+            wikicraft.anonymous: true
+
+            wikicraft.command.pages.add: true
+            wikicraft.command.pages.edit: true
+
+            wikicraft.pages.manage: true
+
+    #   -- Anonymous user permissions --
+    wikicraft.anonymous:
+        # Referenced in:
+        #   - wikicraft.user
+        # Checked in:
+        #   - WCCommandWikiAccount.linkSubcommand()
+        #   - WCCommandWikiAccount.unlinkSubcommand()
+        #   - WCCommandWikiHelp.getCommand()
+        #   - WCCommandWikiPages.infoSubcommand()
+        #   - WCCommandWikiPages.readSubcommand()
+        #   - WCCommandWikiPages.searchSubcommand()
+        description: Grants limited user access
+        default: true
+        children:
+            wikicraft.command.account.link: true
+            wikicraft.command.account.unlink: true
+            wikicraft.command.help: true
+            wikicraft.command.pages.info: true
+            wikicraft.command.pages.read: true
+            wikicraft.command.pages.search: true
+
+            wikicraft.account.bridge: true
+
+            wikicraft.pages.view: true
+
+    # ----------------------------------------------------------------------------
+
+    # ============================
+    #     Command Permissions
+    # ============================
+
+    # This section is for all permissions that allow access to (sub)commands.
+
+    #   -- All commands --
+    wikicraft.command:
+        # Referenced in:
+        #   - wikicraft.admin
+        # Checked in:
+        #   - (all command permission checks)
+        description: Grants access to all commands
+        default: false
+        children:
+            wikicraft.command.account: true # /wiki account
+            wikicraft.command.config: true # /wiki config
+            wikicraft.command.disable: true # /wiki disable
+            wikicraft.command.help: true # /wiki help
+            wikicraft.command.pages: true # /wiki pages
+            wikicraft.command.reload: true # /wiki reload
+
+    #   -- Account commands --
+    wikicraft.command.account:
+        description: Grants access to account commands # /wiki account
+        default: false
+        children:
+            wikicraft.command.account.get: true # /wiki account get
+            wikicraft.command.account.link: true # /wiki account link [wikiUser]
+            wikicraft.command.account.list: true # /wiki account list
+            wikicraft.command.account.unlink: true # /wiki account unlink [wikiUser]
+
+    wikicraft.command.account.get:
+        description: Grants access to the get subcommand # /wiki account get <player|wikiUser>
+        default: false
+
+    wikicraft.command.account.link:
+        description: Grants access to the link subcommand # /wiki account link [wikiUser]
+        default: false
+
+    wikicraft.command.account.list:
+        description: Grants access to the list subcommand # /wiki account list
+        default: false
+
+    wikicraft.command.account.unlink:
+        description: Grants access to the unlink subcommand # /wiki account unlink [wikiUser]
+        default: false
+
+    #   -- Configuration commands --
+    wikicraft.command.config:
+        description: Grants access to configuration commands # /wiki config
+        default: false
+        children:
+            wikicraft.command.config.get: true # /wiki config get [key]
+            wikicraft.command.config.reload: true # /wiki config reload
+            wikicraft.command.config.set: true # /wiki config set <key> [value]
+
+    wikicraft.command.config.get:
+        description: Grants access to the get subcommand # /wiki config get [key]
+        default: false
+
+    wikicraft.command.config.reload:
+        description: Grants access to the reload subcommand # /wiki config reload
+        default: false
+
+    wikicraft.command.config.set:
+        description: Grants access to the set subcommand # /wiki config set <key> [value]
+        default: false
+
+    #   -- Disable command --
+    wikicraft.command.disable:
+        description: Grants access to the disable subcommand # /wiki disable
+        default: false
+
+    #   -- Help command --
+    wikicraft.command.help:
+        description: Grants access to the help subcommand # /wiki help
+        default: false
+
+    #   -- Pages commands --
+    wikicraft.command.pages:
+        description: Grants access to all pages commands # /wiki pages
+        default: false
+        children:
+            wikicraft.command.pages.add: true # /wiki pages add <page> <content>
+            wikicraft.command.pages.delete: true # /wiki pages delete <page>
+            wikicraft.command.pages.edit: true # /wiki pages edit <page> <content>
+            wikicraft.command.pages.info: true # /wiki pages info <page>
+            wikicraft.command.pages.read: true # /wiki pages read <page>
+            wikicraft.command.pages.search: true # /wiki pages search <query>
+
+    wikicraft.command.pages.add:
+        description: Grants access to the add subcommand # /wiki pages add <page> <content>
+        default: false
+
+    wikicraft.command.pages.delete:
+        description: Grants access to the delete subcommand # /wiki pages delete <page>
+        default: false
+
+    wikicraft.command.pages.edit:
+        description: Grants access to the edit subcommand # /wiki pages edit <page> <content>
+        default: false
+
+    wikicraft.command.pages.info:
+        description: Grants access to the info subcommand # /wiki pages info <page>
+        default: false
+
+    wikicraft.command.pages.read:
+        description: Grants access to the read subcommand # /wiki pages read <page>
+        default: false
+
+    wikicraft.command.pages.search:
+        description: Grants access to the search subcommand # /wiki pages search <query>
+        default: false
+
+    #   -- Reload command --
+    wikicraft.command.reload:
+        description: Grants access to the reload subcommand # /wiki reload
+        default: false
+
+    # ----------------------------------------------------------------------------
+
+    # ============================
+    #     Account Permissions
+    # ============================
+
+    # This section is for all permissions that allow access to account management.
+
+    #   -- Account management permissions --
+    wikicraft.account.manage:
+        # Referenced in:
+        #   - wikicraft.admin
+        # Checked in:
+        #   - (all account management permission checks)
+        description: Grants full account management permissions
+        default: false
+        children:
+            wikicraft.account.bridge: true
+            wikicraft.account.unlink.others: true
+            wikicraft.account.view: true
+
+    #   -- Account linking and unlinking permissions --
+    wikicraft.account.bridge:
+        description: Allows linking and unlinking accounts
+        default: false
+        children:
+            wikicraft.account.link: true
+            wikicraft.account.unlink.self: true
+
+    #   -- Account linking permissions --
+    wikicraft.account.link:
+        # Referenced in:
+        #   - wikicraft.account.manage
+        #   - wikicraft.anonymous
+        # Checked in:
+        #   - WCCommandWikiAccount.linkSubcommand()
+        description: Allows linking Minecraft and wiki accounts
+        default: false
+
+    #   -- Account unlinking permissions --
+    wikicraft.account.unlink:
+        # Referenced in:
+        #   - wikicraft.account.manage
+        # Checked in:
+        #   - WCCommandWikiAccount.unlinkSubcommand()
+        description: Allows unlinking any account
+        default: false
+        children:
+            wikicraft.account.unlink.self: true
+            wikicraft.account.unlink.others: true
+
+    #   -- Self-unlinking permission --
+    wikicraft.account.unlink.self:
+        description: Allows unlinking a user's own account
+        default: false
+
+    #   -- External account unlinking permission --
+    wikicraft.account.unlink.others:
+        description: Allows unlinking another user's account
+        default: false
+
+    #   -- Account viewing permissions --
+    wikicraft.account.view:
+        # Checked in:
+        #   - WCCommandWikiAccount.listSubcommand()
+        description: Allows viewing accounts and account information
+        default: false
+
+    # ----------------------------------------------------------------------------
+
+    # ============================
+    #       Page Permissions
+    # ============================
+
+    # This section is for all permissions that allow access to page management.
+
+    #   -- Full page permissions --
+    wikicraft.pages.full:
+        # Referenced in:
+        #   - wikicraft.admin
+        # Checked in:
+        #   - (all page management permission checks)
+        description: Grants full page management permissions
+        default: false
+        children:
+            wikicraft.pages.manage: true
+            wikicraft.pages.delete: true
+            wikicraft.pages.view: true
+
+    #   -- Page deletion permissions --
+    wikicraft.pages.delete:
+        description: Allows deleting pages
+        default: false
+
+    #   -- Page management permissions --
+    wikicraft.pages.manage:
+        description: Allows creating and editing pages
+        default: false
+
+    #   -- Page viewing permissions --
+    wikicraft.pages.view:
+        description: Allows viewing and searching pages
+        default: false
