@@ -27,7 +27,8 @@ jobs:
         id: version
         run: |
           VERSION=$(grep -oP '(?<=version: ).*' src/main/resources/plugin.yml | tr -d '"')
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          SAFE_VERSION=$(echo "$VERSION" | tr '.' '_')
+          echo "version=$SAFE_VERSION" >> $GITHUB_OUTPUT
 
       - name: Create Release
         id: create_release
