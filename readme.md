@@ -83,4 +83,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 For issues or feature requests, please open an issue on my [GitHub repository](https://github.com/iHerongh/WikiCraft), or DM me on Discord at `iheron`.
 
-If you would like to offer monetary, consider seeing my personal [Ko-fi page](https://ko-fi.com/iheron), or supporting my work directly on the [WOFTNW Patreon](https://www.patreon.com/woftnw).
+If you would like to offer monetary support, consider seeing my personal [Ko-fi page](https://ko-fi.com/iheron), or supporting my work directly on the [WOFTNW Patreon](https://www.patreon.com/woftnw).
