@@ -1,10 +1,13 @@
 # WikiCraft
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Modrinth Page](https://img.shields.io/badge/Modrinth-WikiCraft-darkgreen)](https://modrinth.com/plugin/wikicraft)
+[![SpigotMC Page](https://img.shields.io/badge/SpigotMC-WikiCraft-yellow)](https://www.spigotmc.org/resources/wikicraft.121764/)
 
 [![Java Version](https://img.shields.io/badge/Java-21-blue.svg)](https://openjdk.org/projects/jdk/21/)
 
 [![PaperMC Version](https://img.shields.io/badge/PaperMC-1.21.3-blue.svg)](https://papermc.io/downloads)
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 WikiCraft is a Minecraft plugin that integrates MediaWiki functionality directly into your server.
 
