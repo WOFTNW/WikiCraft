@@ -30,6 +30,11 @@ import java.util.Map;
 public class WCCommandWikiConfig {
 
     /**
+     * Constructs a new {@code WCCommandWikiConfig} object.
+     */
+    public WCCommandWikiConfig() {}
+
+    /**
      * Creates the {@code /wiki config <get|reload|set>} subcommand.
      * <p><b>Permission:</b> {@code wikicraft.command.config}
      * <p><b>Usage:</b> {@code /wiki config <get|reload|set>}

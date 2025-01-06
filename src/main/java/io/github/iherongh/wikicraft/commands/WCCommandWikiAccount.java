@@ -35,6 +35,11 @@ import java.util.UUID;
 public class WCCommandWikiAccount {
 
     /**
+     * Constructs a new {@code WCCommandWikiAccount} object.
+     */
+    public WCCommandWikiAccount() {}
+
+    /**
      * Creates the {@code /wiki account <get|link|list|unlink>} command.
      * <p><b>Permission:</b> {@code wikicraft.command.account}
      * <p><b>Usage:</b> {@code /wiki account <get|link|list|unlink>}

@@ -1,13 +1,26 @@
 package io.github.iherongh.wikicraft.commands;
 
-import org.jetbrains.annotations.NotNull;
-
 import dev.jorel.commandapi.CommandAPICommand;
 import dev.jorel.commandapi.ExecutableCommand;
 import io.github.iherongh.wikicraft.messages.WCMessages;
 import io.github.iherongh.wikicraft.wiki.WCWiki;
+import org.jetbrains.annotations.NotNull;
 
+/**
+ * The main 'wiki' command.
+ *
+ * @author iHeronGH
+ *
+ * @version 0.2.0
+ *
+ * @since 0.1.0
+ */
 public class WCCommandWiki {
+
+    /**
+     * Constructs a new {@code WCCommandWiki} object.
+     */
+    public WCCommandWiki() {}
 
     /**
      * Constructs and returns the main 'wiki' command with its subcommands.

@@ -32,12 +32,13 @@ import java.util.HashMap;
  * @see WCCommandWikiPages#infoSubcommand()
  * @see WCCommandWikiPages#readSubcommand()
  * @see WCCommandWikiPages#searchSubcommand()
- *
- * @TODO <ul>
- *          <li>Make /wiki pages edit work... somehow
- *       </ul>
  */
 public class WCCommandWikiPages {
+
+    /**
+     * Constructs a new {@code WCCommandWikiPages} object.
+     */
+    public WCCommandWikiPages() {}
 
     /**
      * Creates the {@code /wiki pages <add|delete|edit|info|read|search>} command.

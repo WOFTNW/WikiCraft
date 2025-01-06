@@ -17,6 +17,11 @@ import org.bukkit.entity.Player;
 public class WCCommandWikiDisable {
 
     /**
+     * Constructs a new {@code WCCommandWikiDisable} object.
+     */
+    public WCCommandWikiDisable() {}
+
+    /**
      * Creates the {@code /wiki disable} subcommand.
      * <p><b>Permission:</b> {@code wikicraft.command.disable}
      * <p><b>Usage:</b> {@code /wiki disable}

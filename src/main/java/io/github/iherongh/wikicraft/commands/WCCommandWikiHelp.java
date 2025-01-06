@@ -23,6 +23,11 @@ import static io.github.iherongh.wikicraft.WikiCraft.TEXT_INFO;
 public class WCCommandWikiHelp {
 
     /**
+     * Constructs a new {@code WCCommandWikiHelp} object.
+     */
+    public WCCommandWikiHelp() {}
+
+    /**
      * Creates the {@code /wiki help} subcommand.
      * <p><b>Permission:</b> {@code wikicraft.command.help}
      * <p><b>Usage:</b> {@code /wiki help}

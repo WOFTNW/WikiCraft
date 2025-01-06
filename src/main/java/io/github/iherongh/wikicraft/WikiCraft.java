@@ -20,22 +20,41 @@ import org.jetbrains.annotations.NotNull;
 public class WikiCraft extends JavaPlugin {
 
     /**
-     * Defines the color scheme constants for WikiCraft.
-     * These colors are used throughout the plugin for consistent visual styling.
+     * Defines the primary colour constants for WikiCraft.
      */
     public static final RGBLike PRIMARY = TextColor.color( 85, 191, 173 );
+
+    /**
+     * Defines the secondary colour constants for WikiCraft.
+     */
     public static final RGBLike SECONDARY = TextColor.color( 51, 141, 143 );
+
+    /**
+     * Defines the tertiary colour constants for WikiCraft.
+     */
     public static final RGBLike TERTIARY = TextColor.color( 27, 68, 66 );
+
+    /**
+     * Defines the info text colour constants for WikiCraft.
+     */
     public static final RGBLike TEXT_INFO = TextColor.color( 199, 227, 216 );
+
+    /**
+     * Defines the error text colour constants for WikiCraft.
+     */
     public static final RGBLike TEXT_ERROR = TextColor.color( 82, 53, 234 );
 
     /**
-     * Defines the prefix components for WikiCraft messages.
+     * Defines the full prefix component for WikiCraft messages.
      */
     public static TextComponent PREFIX = Component.text( "[" ).color( TextColor.color( TERTIARY ) )
         .append( Component.text( "Wiki" ).color( TextColor.color( PRIMARY ) ) )
         .append( Component.text( "Craft" ).color( TextColor.color( SECONDARY ) ) )
         .append( Component.text( "] " ).color( TextColor.color( TERTIARY ) ) );
+
+    /**
+     * Defines the short prefix component for WikiCraft messages.
+     */
     public static TextComponent PREFIX_SHORT = Component.text( "[" ).color( TextColor.color( TERTIARY ) )
         .append( Component.text( "W" ).color( TextColor.color( PRIMARY ) ) )
         .append( Component.text( "C" ).color( TextColor.color( SECONDARY ) ) )
@@ -67,6 +86,11 @@ public class WikiCraft extends JavaPlugin {
         
     }
 
+    /**
+     * Retrieves the version of the WikiCraft plugin.
+     *
+     * @return The version of the WikiCraft plugin.
+     */
     public static @NotNull String getVersion() {
         return getInstance().getPluginMeta().getVersion();
 

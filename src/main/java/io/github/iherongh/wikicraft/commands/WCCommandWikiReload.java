@@ -9,12 +9,19 @@ import io.github.iherongh.wikicraft.wiki.WCWiki;
  * The {@code /wiki reload} command.
  *
  * @author iHeronGH
+ *
  * @version 0.1.0
+ *
  * @since 0.1.0
  *
  * @see WCCommandWikiPages#getCommand()
  */
 public class WCCommandWikiReload {
+
+    /**
+     * Constructs a new {@code WCCommandWikiReload} object.
+     */
+    public WCCommandWikiReload() {}
 
     /**
      * The last time the wiki was reloaded.

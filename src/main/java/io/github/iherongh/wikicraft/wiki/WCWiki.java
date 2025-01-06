@@ -1,12 +1,26 @@
 package io.github.iherongh.wikicraft.wiki;
 
-import java.util.ArrayList;
-
 import io.github.fastily.jwiki.core.Wiki;
 import io.github.iherongh.wikicraft.config.WCConfigUtils;
 import io.github.iherongh.wikicraft.messages.WCMessages;
 
+import java.util.ArrayList;
+
+/**
+ * Provides basic generation and retrieval of a wiki.
+ *
+ * @author iHeronGH
+ *
+ * @version 0.1.0
+ *
+ * @since 0.1.0
+ */
 public class WCWiki {
+
+    /**
+     * Constructs a new {@code WCWiki} object.
+     */
+    public WCWiki() {}
 
     private static Wiki wiki;
 

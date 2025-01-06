@@ -11,8 +11,19 @@ import java.util.Map;
 
 /**
  * A class containing utility methods for the config.yml file.
+ *
+ * @author iHeronGH
+ *
+ * @version 0.1.0
+ *
+ * @since 0.1.0
  */
 public class WCConfigUtils {
+
+    /**
+     * Constructs a new {@code WCConfigUtils} object.
+     */
+    public WCConfigUtils() {}
 
     /**
      * The config.yml file.
@@ -201,6 +212,13 @@ public class WCConfigUtils {
 
     }
 
+    /**
+     * Formats a config value for display.
+     *
+     * @param value The value to be formatted.
+     *
+     * @return The formatted value.
+     */
     public static String formatConfigValue( Object value ) {
         if ( value instanceof Map || value instanceof List ) {
             return new GsonBuilder().setPrettyPrinting().create().toJson( value );

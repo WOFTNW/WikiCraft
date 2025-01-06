@@ -20,34 +20,22 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * Manages the bridge between Minecraft accounts and MediaWiki accounts.
+ * Manages accout bridge functionality.
  *
- * @see WCAccountBridge#addLink(UUID, String)
- * @see WCAccountBridge#hyphenateUUID(String)
- * @see WCAccountBridge#hyphenateUUID(String)
- * @see WCAccountBridge#getAccountData()
- * @see WCAccountBridge#getAccountPair(Map.Entry, String)
- * @see WCAccountBridge#getAccountsFile()
- * @see WCAccountBridge#getCachedData()
- * @see WCAccountBridge#getUUID(String)
- * @see WCAccountBridge#getUUIDToWikiUserMap()
- * @see WCAccountBridge#getWikiUser(UUID)
- * @see WCAccountBridge#getWikiUser(Player)
- * @see WCAccountBridge#getWikiUserToUUIDMap()
- * @see WCAccountBridge#instantiateAccountFile()
- * @see WCAccountBridge#loadAccountLinks()
- * @see WCAccountBridge#relinkAccount(UUID, String)
- * @see WCAccountBridge#removeLink(String, UUID)
- * @see WCAccountBridge#removeLinkWithUUID(UUID)
- * @see WCAccountBridge#removeLinkWithWikiUser(String)
- * @see WCAccountBridge#requestLink(UUID, String)
- * @see WCAccountBridge#setCachedData(JsonObject)
- * @see WCAccountBridge#updateAccountData(JsonObject)
- * @see WCAccountBridge#updateAccountData(JsonObject, UUID, String, String)
- * @see WCAccountBridge#UUIDOfWikiUser(String)
- * @see WCAccountBridge#wikiUserOfUUID(String)
+ * @author iHeronGH
+ *
+ * @version 0.2.0
+ *
+ * @since 0.1.0
  */
 public class WCAccountBridge {
+
+    /**
+     * Constructs a new {@code WCAccountBridge} object.
+     */
+    public WCAccountBridge() {
+
+    }
 
     /**
      * The file storing the account bridge.
@@ -80,6 +68,11 @@ public class WCAccountBridge {
 
     }
 
+    /**
+     * Gets the cached account data.
+     *
+     * @return The account data.
+     */
     public static JsonObject getCachedData() {
         if ( cachedData == null || System.currentTimeMillis() - lastCached > CACHE_DURATION ) {
             try {
@@ -99,6 +92,11 @@ public class WCAccountBridge {
 
     }
 
+    /**
+     * Gets the map of UUIDs to MediaWiki accounts.
+     *
+     * @param data The account data.
+     */
     public static void setCachedData( JsonObject data ) {
         cachedData = data;
         lastCached = System.currentTimeMillis();
@@ -144,6 +142,8 @@ public class WCAccountBridge {
 
     /**
      * Gets the map of MediaWiki accounts to UUIDs.
+     *
+     * @param uuid The UUID of the player.
      *
      * @return The map of MediaWiki accounts to UUIDs.
      *
@@ -356,17 +356,17 @@ public class WCAccountBridge {
      * @param uuid The UUID of the player to link.
      * @param wikiUsername The MediaWiki account to link to.
      * @return <ul>
+     *            <li>{@code mediawiki_account_already_linked} if the MediaWiki account is already linked to a player.
+     *            <li>{@code uuid_already_linked} if the UUID is already linked to a MediaWiki account.
+     *            <li>{@code user_subpage_not_found} if the player's WikiCraft subpage does not exist.
+     *            <li>{@code user_subpage_creator_mismatch} if the player's WikiCraft subpage creator does not match the player's UUID.
+     *            <li>{@code uuid_not_found} if the player's UUID is not found in their WikiCraft subpage.
+     *            <li>{@code success} if the link was successful.
+     *            <li>{@code add_link_failed} if the link could not be added.
+     *            <li>{@code null} if an unknown error occurs.
+     *        </ul>
      *
      * @since 0.1.0
-     *             <li>{@code mediawiki_account_already_linked} if the MediaWiki account is already linked to a player.
-     *             <li>{@code uuid_already_linked} if the UUID is already linked to a MediaWiki account.
-     *             <li>{@code user_subpage_not_found} if the player's WikiCraft subpage does not exist.
-     *             <li>{@code user_subpage_creator_mismatch} if the player's WikiCraft subpage creator does not match the player's UUID.
-     *             <li>{@code uuid_not_found} if the player's UUID is not found in their WikiCraft subpage.
-     *             <li>{@code success} if the link was successful.
-     *             <li>{@code add_link_failed} if the link could not be added.
-     *             <li>{@code null} if an unknown error occurs.
-     *         </ul>
      */
     public static @NotNull String requestLink( UUID uuid, String wikiUsername ) {
         JsonObject data = getAccountData();
@@ -602,6 +602,14 @@ public class WCAccountBridge {
 
     }
 
+    /**
+     * Gets the accounts file.
+     *
+     * @param entry The entry to get the accounts file for.
+     * @param mcUsername The Minecraft username to get the accounts file for.
+     *
+     * @return The accounts file.
+     */
     public static @NotNull Component getAccountPair( Map.@NotNull Entry<UUID, String> entry, String mcUsername ) {
         String wikiUsername = entry.getValue();
         String wikiUrl = WCUtils.userURL( wikiUsername );
@@ -615,6 +623,11 @@ public class WCAccountBridge {
 
     }
 
+    /**
+     * Gets the account data from the accounts file.
+     *
+     * @return The account data.
+     */
     public static JsonObject getAccountData() {
         if ( cachedData == null || System.currentTimeMillis() - lastCached > CACHE_DURATION ) {
             try ( FileReader reader = new FileReader( getAccountsFile() ) ) {
@@ -633,6 +646,14 @@ public class WCAccountBridge {
 
     }
 
+    /**
+     * Gets the accounts file.
+     *
+     * @param uuid The UUID to get the accounts file for.
+     * @param wikiUser The MediaWiki account to get the accounts file for.
+     *
+     * @return The accounts file.
+     */
     public static @NotNull String relinkAccount( UUID uuid, String wikiUser ) {
 
         // Attempt to re-link an existing account bridge

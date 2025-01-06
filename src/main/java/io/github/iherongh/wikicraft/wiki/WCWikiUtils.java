@@ -38,6 +38,11 @@ import java.util.HashMap;
 public class WCWikiUtils {
 
     /**
+     * Constructs a new {@code WCWikiUtils} object.
+     */
+    public WCWikiUtils() {}
+
+    /**
      * MediaWiki convention requires a maximum of 5 seconds for a request to be processed.
      * <br>Do not increase this value beyond 5!
      * <br>
@@ -427,7 +432,12 @@ public class WCWikiUtils {
 
     }
 
-    public static String getToken() {
+    /**
+     * Gets a valid token for the wiki.
+     *
+     * @return A valid token for the wiki.
+     */
+    public static @Nullable String getToken() {
         try {
             WCMessages.debug( "info", "Getting CSRF token..." );
 

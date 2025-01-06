@@ -16,7 +16,21 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+/**
+ * Contains utility methods for the plugin.
+ *
+ * @author iHeronGH
+ *
+ * @version 0.2.0
+ *
+ * @since 0.1.0
+ */
 public class WCUtils {
+
+    /**
+     * Constructs a new {@code WCUtils} object.
+     */
+    public WCUtils() {}
 
     /**
      * A UUID-to-long map that tracks when a given account last made a request to the wiki.
@@ -25,6 +39,13 @@ public class WCUtils {
      */
     private static final Map<UUID, Long> lastRequestTime = new HashMap<>();
 
+    /**
+     * Gets a player object from a player name, regardless of whether they are online or not.
+     *
+     * @param playerName The name of the player to get.
+     *
+     * @return The player object representation of the player's name.
+     */
     public static Player getPlayer( String playerName ) {
         for ( Player player : Bukkit.getOnlinePlayers() ) {
             if ( player.getName().equals( playerName ) ) {
@@ -38,6 +59,13 @@ public class WCUtils {
 
     }
 
+    /**
+     * Gets a player object from a UUID, regardless of whether they are online or not.
+     *
+     * @param uuid The UUID of the player to get.
+     *
+     * @return The player object representation of the player's UUID.
+     */
     public static Player getPlayer( UUID uuid ) {
         for ( Player player : Bukkit.getOnlinePlayers() ) {
             if ( player.getUniqueId().equals( uuid ) ) {
@@ -51,31 +79,80 @@ public class WCUtils {
 
     }
 
+    /**
+     * Creates a URL for a user page on the wiki.
+     *
+     * @param user The user to create a URL for.
+     *
+     * @return The URL for the user's page.
+     */
     public static @NotNull String userURL( String user ) {
         return "https://" + WCConfigUtils.getWikiURL() + "/wiki/User:" + user;
 
     }
 
+    /**
+     * Creates a URL for a user subpage on the wiki.
+     *
+     * @param user The user to create a URL for.
+     * @param subpage The subpage to create a URL for.
+     *
+     * @return The URL for the user's subpage.
+     */
     public static @NotNull String userURL( String user, String subpage ) {
         return userURL( user ) + "/" + subpage;
 
     }
 
+    /**
+     * Creates a URL for a page on the wiki.
+     *
+     * @param page The page to create a URL for.
+     *
+     * @return The URL for the page.
+     */
     public static @NotNull String pageURL( String page ) {
         return "https://" + WCConfigUtils.getWikiURL() + "/wiki/" + page;
 
     }
 
+    /**
+     * Creates a URL for a page on the wiki.
+     *
+     * @param page The page to create a URL for.
+     * @param section The section to create a URL for.
+     *
+     * @return The URL for the page.
+     */
     public static @NotNull String pageURL( String page, String section ) {
         return pageURL( page ) + "#" + section;
 
     }
 
+    /**
+     * Creates a URL for a page on the wiki.
+     *
+     * @param page The page to create a URL for.
+     * @param section The section to create a URL for.
+     * @param anchor The anchor to create a URL for.
+     *
+     * @return The URL for the page.
+     */
     public static @NotNull String pageURL( String page, String section, String anchor ) {
         return pageURL( page, section ) + ":" + anchor;
 
     }
 
+    /**
+     * Creates a URL for a page on the wiki.
+     *
+     * @param page The page to create a URL for.
+     * @param section The section to create a URL for.
+     * @param anchor The anchor to create a URL for.
+     * @param query The query to create a URL for.
+     *
+     * @return The URL for the page.
+     */
     public static @NotNull String pageURL( String page, String section, String anchor, String query ) {
         return pageURL( page, section, anchor ) + "?" + query;
 
@@ -96,9 +173,9 @@ public class WCUtils {
     /**
      * Sets the last time a player sent a request to the wiki to the current time.
      *
-     * @param uuid The UUID of the player.
+     * @param player The player to set the last request time for.
      */
-    public static void setLastRequestTime( Player player ) {
+    public static void setLastRequestTime( @NotNull Player player ) {
         long now = System.currentTimeMillis();
         WCMessages.debug( "info", "Updating last request time for " + player.getName() + "..." );
         setLastRequestTime( player.getUniqueId(), now );
@@ -151,6 +228,13 @@ public class WCUtils {
 
     }
 
+    /**
+     * Converts a JSON object to a map.
+     *
+     * @param json The JSON object to convert.
+     *
+     * @return The map representation of the JSON object.
+     */
     public static @NotNull Map<String, Object> convertJsonToMap( @NotNull JsonObject json ) {
         Map<String, Object> map = new HashMap<>();
 
@@ -169,21 +253,55 @@ public class WCUtils {
 
     }
 
+    /**
+     * Hyperlinks a string.
+     *
+     * @param text The text to hyperlink.
+     *
+     * @return The hyperlinked text.
+     */
     public static @NotNull Component hyperlink( String text ) {
         return hyperlink( text, text );
 
     }
 
+    /**
+     * Hyperlinks a string.
+     *
+     * @param text The text to hyperlink.
+     * @param url The URL to link to.
+     *
+     * @return The hyperlinked text.
+     */
     public static @NotNull Component hyperlink( String text, String url ) {
         return hyperlink( text, url, null );
 
     }
 
+    /**
+     * Hyperlinks a string.
+     *
+     * @param text The text to hyperlink.
+     * @param url The URL to link to.
+     * @param hoverText The text to display when hovering over the link.
+     *
+     * @return The hyperlinked text.
+     */
     public static @NotNull Component hyperlink( String text, String url, String hoverText ) {
         return hyperlink( text, url, hoverText, true );
 
     }
 
+    /**
+     * Hyperlinks a string.
+     *
+     * @param text The text to hyperlink.
+     * @param url The URL to link to.
+     * @param hoverText The text to display when hovering over the link.
+     * @param underlined Whether the link should be underlined or not.
+     *
+     * @return The hyperlinked text.
+     */
     public static @NotNull Component hyperlink( String text, String url, String hoverText, boolean underlined ) {
         if ( hoverText == null ) {
             if ( !underlined ) {

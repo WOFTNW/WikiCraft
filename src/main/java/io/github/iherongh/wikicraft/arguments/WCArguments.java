@@ -15,9 +15,20 @@ import java.util.ArrayList;
 import java.util.Set;
 
 /**
- * Manages argument handling and validation.
+ * Contains and generates arguments to be used in commands.
+ *
+ * @author iHeronGH
+ *
+ * @version 0.2.0
+ *
+ * @since 0.1.0
  */
 public class WCArguments {
+
+    /**
+     * Constructs a new {@link WCArguments} object.
+     */
+    public WCArguments() {}
 
     /**
      * Creates a command argument for player names with customizable entity inclusion.
@@ -84,6 +95,11 @@ public class WCArguments {
 
     }
 
+    /**
+     * Generates a list of users on the configured wiki, to be passed as command arguments.
+     *
+     * @return A list of {@link StringArgument} objects representing all available wiki users.
+     */
     public static ArrayList<String> getWikiPages() {
         return WCWikiUtils.getPageCache();
 

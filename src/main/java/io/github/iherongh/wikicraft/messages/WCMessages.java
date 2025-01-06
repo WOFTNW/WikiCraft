@@ -8,9 +8,20 @@ import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Handles message formatting and delivery.
+ * The class for handling WikiCraft messages.
+ *
+ * @author iHeronGH
+ *
+ * @version 0.1.0
+ *
+ * @since 0.1.0
  */
 public class WCMessages {
+
+    /**
+     * Constructs a new {@code WCMessages} object.
+     */
+    public WCMessages() {}
 
     /**
      * Creates a formatted message component based on the specified level and message.
