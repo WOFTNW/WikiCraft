@@ -10,8 +10,12 @@ prefix: WikiCraft
 load: POSTWORLD
 license: MIT
 
-softdepend:
-    - LuckPerms
+depend:
+  server:
+    LuckPerms:
+      load: BEFORE
+      required: true
+      join-classpath: true
 
 libraries:
     - io.github.fastily:jwiki:1.11.0
