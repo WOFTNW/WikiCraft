@@ -5,7 +5,7 @@
 
 [![Java Version](https://img.shields.io/badge/Java-21-blue.svg)](https://openjdk.org/projects/jdk/21/)
 
-[![PaperMC Version](https://img.shields.io/badge/PaperMC-1.21.3-blue.svg)](https://papermc.io/downloads)
+[![PaperMC Version](https://img.shields.io/badge/PaperMC-1.21.8-blue.svg)](https://papermc.io/downloads)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
