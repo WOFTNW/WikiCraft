@@ -1,7 +1,7 @@
 package io.github.iherongh.wikicraft;
 
 import dev.jorel.commandapi.CommandAPI;
-import dev.jorel.commandapi.CommandAPIBukkitConfig;
+import dev.jorel.commandapi.CommandAPIPaperConfig;
 import io.github.iherongh.wikicraft.account.WCAccountBridge;
 import io.github.iherongh.wikicraft.commands.WCCommandWiki;
 import io.github.iherongh.wikicraft.messages.WCMessages;
@@ -140,10 +140,7 @@ public class WikiCraft extends JavaPlugin {
     public void onLoad() {
         try {
             // Initialize CommandAPI
-            CommandAPI.onLoad( new CommandAPIBukkitConfig( this )
-                .skipReloadDatapacks( true )
-                .usePluginNamespace()
-            );
+            CommandAPI.onLoad( new CommandAPIPaperConfig( this ).silentLogs( true ) );
 
         } catch ( Exception e ) {
             WCMessages.throwError( e );

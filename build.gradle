@@ -20,15 +20,15 @@ allprojects {
 }
 
 dependencies {
-    annotationProcessor "dev.jorel:commandapi-annotations:9.7.0"
+    annotationProcessor "dev.jorel:commandapi-annotations:11.0.0"
 
     // Paper API
     compileOnly "io.papermc.paper:paper-api:1.21.3-R0.1-SNAPSHOT"
 
     // CommandAPI
-    implementation "dev.jorel:commandapi-bukkit-shade:9.7.0"
+    implementation "dev.jorel:commandapi-paper-shade:11.0.0"
 
-    compileOnly "dev.jorel:commandapi-annotations:9.7.0"
+    compileOnly "dev.jorel:commandapi-annotations:11.0.0"
 
     compileOnly 'io.github.fastily:jwiki:1.11.0'
 
@@ -61,7 +61,7 @@ processResources {
     def props = [version: version]
     inputs.properties props
     filteringCharset 'UTF-8'
-    filesMatching( 'plugin.yml' ) {
+    filesMatching( 'paper-plugin.yml' ) {
         expand props
 
     }
